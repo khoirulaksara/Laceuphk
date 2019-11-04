@@ -1,6 +1,7 @@
-# flutter_laceuphk
+# Flutter Laceuphk
 
-A new Flutter project.
+A Flutter project for LaceupHK.
+https://laceuphk.com
 
 ## Getting Started
 
