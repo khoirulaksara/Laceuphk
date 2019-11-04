@@ -1,0 +1,1 @@
+//Text(parse((wppost['excerpt']['rendered']).toString()).documentElement.text)
