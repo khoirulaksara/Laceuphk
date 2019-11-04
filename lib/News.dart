@@ -1,69 +1,97 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'wp-api.dart';
-import 'package:html/parser.dart';
+import './Postwidget.dart';
+import './Posts.dart';
 
-class NewsPage extends StatelessWidget {
+class NewsState extends State<News> {
+  var _posts = <Posts>[];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _loadData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-      child: FutureBuilder(
-        future: fetchWpPosts(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                Map wppost = snapshot.data[index];
-                var imageurl = wppost["_embedded"]["wp:featuredmedia"][0]
-                    ["media_details"]["sizes"]["thumbnail"]["source_url"];
-                return GestureDetector(
-                  onTap: () {
-                    print("Container was tapped");
-                  },
-                  child: buildCard(imageurl, wppost),
-                );
-              },
-            );
-          }
-          return Center(child: CircularProgressIndicator());
-        },
-      ),
-    ));
+      body: ListView.builder(
+          itemCount: _posts.length ,
+          itemBuilder: (BuildContext context, int position) {
+            //if (position.isOdd) return Divider();
+
+            final index = position ;
+
+            return _buildRow(index);
+          }),
+    );
   }
 
-  Card buildCard(imageurl, Map wppost) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
+  Widget _buildRow(int i) {
+    return GestureDetector(
+      onTap: () {
+        _pushPost(_posts[i]);
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(children: <Widget>[
             Expanded(
               flex: 4,
-              child: Image.network(
-                imageurl,
-                fit: BoxFit.cover,
-                height: 100,
-              ),
-            ),
-            SizedBox(
-              width: 10,
+              child: Image.network(_posts[i].imageurl),
             ),
             Expanded(
               flex: 6,
-              child: Text(
-                wppost['title']['rendered'],
-                style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
-              ),
+              child: Text("${_posts[i].title}"),
             ),
-          ],
+          ]),
         ),
       ),
     );
   }
+
+  _pushPost(Posts posts) {
+    Navigator.push(
+        context,
+        PageRouteBuilder(
+            opaque: true,
+            //transitionDuration: const Duration(milliseconds: 1000),
+            pageBuilder: (BuildContext context, _, __) {
+              return PostWidget(posts);
+            }
+            // transitionsBuilder:
+            //     (_, Animation<double> animation, __, Widget child) {
+            //   return FadeTransition(
+            //     opacity: animation,
+            //     child: RotationTransition(
+            //       turns: Tween<double>(begin: 0.0, end: 1.0).animate(animation),
+            //       child: child,
+            //     ),
+            //   );
+            ));
+  }
+
+  _loadData() async {
+    const String dataURL = Strings.dataUrl;
+    http.Response response = await http.get(dataURL);
+    setState(() {
+      final membersJSON = jsonDecode(response.body);
+
+      for (var memberJSON in membersJSON) {
+        final posts = Posts(
+            memberJSON['title']['rendered'],
+            memberJSON["_embedded"]["wp:featuredmedia"][0]["media_details"]
+                ["sizes"]["thumbnail"]["source_url"]);
+        _posts.add(posts);
+      }
+    });
+  }
+}
+
+class News extends StatefulWidget {
+  @override
+  createState() => NewsState();
 }
