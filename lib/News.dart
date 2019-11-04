@@ -22,9 +22,7 @@ class NewsState extends State<News> {
           itemCount: _posts.length ,
           itemBuilder: (BuildContext context, int position) {
             //if (position.isOdd) return Divider();
-
             final index = position ;
-
             return _buildRow(index);
           }),
     );
@@ -82,9 +80,8 @@ class NewsState extends State<News> {
 
       for (var memberJSON in membersJSON) {
         final posts = Posts(
-            memberJSON['title']['rendered'],
-            memberJSON["_embedded"]["wp:featuredmedia"][0]["media_details"]
-                ["sizes"]["thumbnail"]["source_url"]);
+            memberJSON['title'],
+            memberJSON["media"]["thumbnail"]);
         _posts.add(posts);
       }
     });
