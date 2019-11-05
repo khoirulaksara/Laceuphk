@@ -26,9 +26,6 @@ class MyAppState extends State<MyApp> {
         primarySwatch: Colors.cyan,
       ),
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('LaceupHK'),
-        ),
         body: _pageOptions[_selectedPage],
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _selectedPage,

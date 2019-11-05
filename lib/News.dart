@@ -76,12 +76,12 @@ class NewsState extends State<News> {
     const String dataURL = Strings.dataUrl;
     http.Response response = await http.get(dataURL);
     setState(() {
-      final membersJSON = jsonDecode(response.body);
+      final postJSON = jsonDecode(response.body);
 
-      for (var memberJSON in membersJSON) {
+      for (var postJSON in postJSON) {
         final posts = Posts(
-            memberJSON['title'],
-            memberJSON["media"]["thumbnail"]);
+            postJSON['title'],
+            postJSON["media"]["thumbnail"]);
         _posts.add(posts);
       }
     });
