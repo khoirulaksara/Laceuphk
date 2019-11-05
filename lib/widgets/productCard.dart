@@ -52,7 +52,7 @@ class ProductCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
                       ),
-                    )
+                    ),
                     Align(
                       alignment: Alignment.bottomLeft,
                       child: Padding(
@@ -66,14 +66,20 @@ class ProductCard extends StatelessWidget {
                           children: <Widget>[
                             Text(
                               shoes.name,
-                              style: TextStyle(fontSize: 15),
+                              style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 15),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(20),
                             ),
                             Text(
                               "\$${shoes.price}",
-                              style: TextStyle(fontSize: 12),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 20),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(25),
@@ -84,11 +90,17 @@ class ProductCard extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(8)),
+                              child: Center(
+                                child: Icon(
+                                  Icons.add,
+                                  size: 18,
+                                  color: shoes.colors[1],
+                                ),
                               ),
                             )
                           ],
                         ),
-                      ),
+                      )
                       )
                   ],
                 ),
