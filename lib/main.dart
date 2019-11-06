@@ -18,6 +18,11 @@ class MyAppState extends State<MyApp> {
     StorePage(),
   ];
 
+  List<Widget> bottomNavIconList = [
+    Icon(Icons.home, size: 35),
+    Icon(Icons.store, size: 35),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,22 +31,59 @@ class MyAppState extends State<MyApp> {
         primarySwatch: Colors.cyan,
       ),
       home: Scaffold(
-        body: _pageOptions[_selectedPage],
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedPage,
-          onTap: (int index) {
-            setState(() {
-              _selectedPage = index;
-            });
-          },
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.home), title: Text('News')),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.store), title: Text('Store')),
-          ],
-        ),
-      ),
+          body: _pageOptions[_selectedPage],
+          bottomNavigationBar: Container(
+            height: 70,
+            decoration: BoxDecoration(color: Colors.white, boxShadow: [
+              BoxShadow(
+                  color: Colors.black12.withOpacity(0.065),
+                  offset: Offset(0, -3),
+                  blurRadius: 10)
+            ]),
+            child: Row(
+              children: bottomNavIconList.map((item) {
+                var index = bottomNavIconList.indexOf(item);
+                return Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selectedPage = index;
+                      });
+                    },
+                    child: bottomNavItem(item, index == _selectedPage),
+                  ),
+                );
+              }).toList(),
+            ),
+          )
+          // BottomNavigationBar(
+          //   currentIndex: _selectedPage,
+          //   onTap: (int index) {
+          //     setState(() {
+          //       _selectedPage = index;
+          //     });
+          //   },
+          //   items: [
+          //     BottomNavigationBarItem(
+          //         icon: Icon(Icons.home), title: Text('News')),
+          //     BottomNavigationBarItem(
+          //         icon: Icon(Icons.store), title: Text('Store')),
+          //   ],
+          // ),
+          ),
     );
   }
 }
+
+bottomNavItem(Widget item, bool isSelected) => Container(
+      decoration: BoxDecoration(
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                      color: Colors.black12.withOpacity(.02),
+                      offset: Offset(0, 5),
+                      blurRadius: 10)
+                ]
+              : []),
+      child: item,
+    );

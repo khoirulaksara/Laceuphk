@@ -1,124 +1,67 @@
-import 'dart:ui' as prefix0;
-
 import 'package:flutter/material.dart';
-import 'package:flutter_laceuphk/model/Product.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProductCard extends StatelessWidget {
-  final Shoes shoes;
-  final int cardNum;
+  int cardColor;
+  String imgUrl;
+  String title;
+  String previousPrice;
+  String price;
 
-  ProductCard({this.shoes,this.cardNum});
+  ProductCard(
+      this.cardColor, this.imgUrl, this.title, this.previousPrice, this.price);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: ScreenUtil().setWidth(642),
-      child: Stack(
-        fit: StackFit.expand,
+    return new Container(
+      width: double.infinity,
+      height: 320.0,
+      decoration: BoxDecoration(
+          color: Color(cardColor),
+          borderRadius: BorderRadius.circular(20.0),
+          border: Border.all(color: Colors.grey.withOpacity(.3), width: .2)),
+      child: Column(
         children: <Widget>[
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.only(
-                bottom: ScreenUtil().setHeight(40)
-              ),
-              child: Container(
-                width: ScreenUtil().setWidth(620),
-                height: ScreenUtil().setHeight(990),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: shoes.colors,
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      offset: Offset(0,8),
-                      blurRadius: 8,
-                    )
-                  ],
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Stack(
-                  children: <Widget>[
-                    Positioned(
-                      left: ScreenUtil().setWidth(40),
-                      top: ScreenUtil().setHeight(50),
-                      child: Text("0${cardNum +1}",
-                      style: TextStyle(
-                        fontSize: 30, 
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          left: ScreenUtil().setWidth(45),
-                          bottom: ScreenUtil().setHeight(45),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              shoes.name,
-                              style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 15),
-                            ),
-                            SizedBox(
-                              height: ScreenUtil().setHeight(20),
-                            ),
-                            Text(
-                              "\$${shoes.price}",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                fontSize: 20),
-                            ),
-                            SizedBox(
-                              height: ScreenUtil().setHeight(25),
-                            ),
-                            Container(
-                              width: ScreenUtil().setWidth(75),
-                              height: ScreenUtil().setHeight(75),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8)),
-                              child: Center(
-                                child: Icon(
-                                  Icons.add,
-                                  size: 18,
-                                  color: shoes.colors[1],
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                      )
-                  ],
-                ),
-              ),
-            ),
+          SizedBox(
+            height: 8.0,
           ),
-          Positioned(
-            top: ScreenUtil().setHeight(60),
-            left: ScreenUtil().setWidth(-22),
-            child: Image.asset(
-              shoes.imageURL,
-              width: ScreenUtil().setWidth(640),
-              height: ScreenUtil().setHeight(610),
-              fit: BoxFit.cover,
+          Image.asset(imgUrl, width: 281.0, height: 191.0),
+          Text(title, style: TextStyle(fontSize: 25.0, fontFamily: "Raleway")),
+          SizedBox(
+            height: 15.0,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.favorite),
+                  onPressed: () {},
+                ),
+                Column(
+                  children: <Widget>[
+                    Text(previousPrice,
+                        style: TextStyle(
+                            color: Color(0xFFfeb0ba),
+                            fontSize: 16.0,
+                            fontFamily: "Helvetica")),
+                    SizedBox(
+                      height: 12.0,
+                    ),
+                    Text(price,
+                        style:
+                            TextStyle(fontSize: 28.0, fontFamily: "Helvetica")),
+                  ],
+                ),
+                IconButton(
+                  icon: Icon(Icons.shopping_cart),
+                  onPressed: () {},
+                )
+              ],
             ),
           )
         ],
-      )
+      ),
     );
   }
 }

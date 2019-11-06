@@ -40,9 +40,9 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
   assets:
-    - lib/assets/images/portrait.png
-    - lib/assets/images/Air_Jordan_1_x_Off_White_Chicago_1024x1024.png
-    
+    - lib/assets/images/logo.png
+    - lib/assets/images/shoes_01.png
+    - lib/assets/images/shoes_02.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
