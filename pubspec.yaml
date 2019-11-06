@@ -65,6 +65,15 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+
+  fonts:
+    - family: CustomIcons
+      fonts:
+        - asset: lib/assets/icons/custom_icons.ttf
+    - family: Calibre-Semibold
+      fonts:
+        - asset: lib/assets/fonts/Calibre/Calibre-Semibold.otf
+
   # fonts:
   #   - family: Schyler
   #     fonts:

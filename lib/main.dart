@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import './News.dart';
-import './Store.dart';
+import './screen/News.dart';
+import './screen/Store.dart';
 
 void main() => runApp(MyApp());
 
@@ -55,22 +55,7 @@ class MyAppState extends State<MyApp> {
                 );
               }).toList(),
             ),
-          )
-          // BottomNavigationBar(
-          //   currentIndex: _selectedPage,
-          //   onTap: (int index) {
-          //     setState(() {
-          //       _selectedPage = index;
-          //     });
-          //   },
-          //   items: [
-          //     BottomNavigationBarItem(
-          //         icon: Icon(Icons.home), title: Text('News')),
-          //     BottomNavigationBarItem(
-          //         icon: Icon(Icons.store), title: Text('Store')),
-          //   ],
-          // ),
-          ),
+          )),
     );
   }
 }
