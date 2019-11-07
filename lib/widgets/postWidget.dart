@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
-import './Posts.dart';
+import '../model/Posts.dart';
 
 class PostState extends State<PostWidget>{
   final Posts posts;
