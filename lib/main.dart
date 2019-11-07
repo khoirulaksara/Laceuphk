@@ -32,30 +32,31 @@ class MyAppState extends State<MyApp> {
       ),
       home: Scaffold(
           body: _pageOptions[_selectedPage],
-          bottomNavigationBar: Container(
-            height: 70,
-            decoration: BoxDecoration(color: Colors.white, boxShadow: [
-              BoxShadow(
-                  color: Colors.black12.withOpacity(0.065),
-                  offset: Offset(0, -3),
-                  blurRadius: 10)
-            ]),
-            child: Row(
-              children: bottomNavIconList.map((item) {
-                var index = bottomNavIconList.indexOf(item);
-                return Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _selectedPage = index;
-                      });
-                    },
-                    child: bottomNavItem(item, index == _selectedPage),
-                  ),
-                );
-              }).toList(),
-            ),
-          )),
+          // bottomNavigationBar: Container(
+          //   height: 70,
+          //   decoration: BoxDecoration(color: Colors.white, boxShadow: [
+          //     BoxShadow(
+          //         color: Colors.black12.withOpacity(0.065),
+          //         offset: Offset(0, -3),
+          //         blurRadius: 10)
+          //   ]),
+          //   child: Row(
+          //     children: bottomNavIconList.map((item) {
+          //       var index = bottomNavIconList.indexOf(item);
+          //       return Expanded(
+          //         child: GestureDetector(
+          //           onTap: () {
+          //             setState(() {
+          //               _selectedPage = index;
+          //             });
+          //           },
+          //           child: bottomNavItem(item, index == _selectedPage),
+          //         ),
+          //       );
+          //     }).toList(),
+          //   ),
+          // )
+          ),
     );
   }
 }

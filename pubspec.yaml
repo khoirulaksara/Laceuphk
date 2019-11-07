@@ -43,6 +43,7 @@ flutter:
     - lib/assets/images/logo.png
     - lib/assets/images/shoes_01.png
     - lib/assets/images/shoes_02.png
+    - lib/assets/images/image_02.jpg
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
