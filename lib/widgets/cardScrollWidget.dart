@@ -20,7 +20,6 @@ class CardScrollWidget extends StatelessWidget {
         builder: (context, contraints) {
           var width = contraints.maxWidth;
           var height = contraints.maxHeight;
-
           var safeWidth = width - 2 * padding;
           var safeHeight = height - 2 * padding;
 
@@ -50,56 +49,78 @@ class CardScrollWidget extends StatelessWidget {
               textDirection: TextDirection.rtl,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16.0),
-                child: Container(
-                  decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                    BoxShadow(
-                        color: Colors.black12,
-                        offset: Offset(3.0, 6.0),
-                        blurRadius: 10.0)
-                  ]),
-                  child: AspectRatio(
-                    aspectRatio: cardAspectRatio,
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: <Widget>[
-                        Image.network(_posts[postContoll].imageurl,
-                            fit: BoxFit.cover),
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 8.0),
-                                child: Text(_posts[postContoll].title,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 25.0,
-                                        fontFamily: "SF-Pro-Text-Regular")),
-                              ),
-                              SizedBox(
-                                height: 10.0,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 12.0, bottom: 12.0),
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 22.0, vertical: 6.0),
-                                  decoration: BoxDecoration(
-                                      color: Colors.blueAccent,
-                                      borderRadius:
-                                          BorderRadius.circular(20.0)),
-                                  child: Text("Read Later",
-                                      style: TextStyle(color: Colors.white)),
-                                ),
-                              )
-                            ],
+                child: GestureDetector(
+                  onTap: (){print("object");},
+                  child: Container(
+                    decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                      BoxShadow(
+                          color: Colors.black12,
+                          offset: Offset(3.0, 6.0),
+                          blurRadius: 10.0)
+                    ]),
+                    child: AspectRatio(
+                      aspectRatio: cardAspectRatio,
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: (){print("object");},
+                            child: Image.network(_posts[postContoll].imageurl,
+                                fit: BoxFit.cover),
                           ),
-                        )
-                      ],
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 16.0, vertical: 8.0),
+                                    child: ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                        minWidth: 0,
+                                        maxWidth: 250.0,
+                                        minHeight: 0,
+                                        maxHeight: 100.0,
+                                      ),
+                                      child: Text(_posts[postContoll].title,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 25.0,
+                                              fontFamily: "SF-Pro-Text-Regular")),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10.0,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 12.0, bottom: 12.0),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        print("FUCK!");
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 22.0, vertical: 6.0),
+                                        decoration: BoxDecoration(
+                                            color: Colors.blueAccent,
+                                            borderRadius:
+                                                BorderRadius.circular(20.0)),
+                                        child: Text("Read More",
+                                            style:
+                                                TextStyle(color: Colors.white)),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -115,25 +136,4 @@ class CardScrollWidget extends StatelessWidget {
       ),
     );
   }
-
-  // _pushPost(Posts posts) {
-  //   Navigator.push(
-  //       context,
-  //       PageRouteBuilder(
-  //           opaque: true,
-  //           //transitionDuration: const Duration(milliseconds: 1000),
-  //           pageBuilder: (BuildContext context, _, __) {
-  //             return PostWidget(posts);
-  //           }
-  //           // transitionsBuilder:
-  //           //     (_, Animation<double> animation, __, Widget child) {
-  //           //   return FadeTransition(
-  //           //     opacity: animation,
-  //           //     child: RotationTransition(
-  //           //       turns: Tween<double>(begin: 0.0, end: 1.0).animate(animation),
-  //           //       child: child,
-  //           //     ),
-  //           //   );
-  //           ));
-  // }
 }
