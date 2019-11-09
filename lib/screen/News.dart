@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_laceuphk/widgets/cardScrollWidget.dart';
+import 'package:flutter_laceuphk/widgets/postWidget.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../utils/wp-api.dart';
@@ -13,6 +14,7 @@ class News extends StatefulWidget {
 
 class _NewsState extends State<News> {
   var _posts = <Posts>[];
+  var reversed_posts;
   var currentPage;
   Container main;
   PageController _controller;
@@ -54,6 +56,7 @@ class _NewsState extends State<News> {
         final posts = Posts(
             postJSON['title'], postJSON["media"]["colormag-featured-image"]);
         _posts.add(posts);
+        reversed_posts = _posts.reversed.toList();
       }
 
       _controller = PageController(initialPage: _posts.length - 1);
@@ -61,7 +64,6 @@ class _NewsState extends State<News> {
       _controller.addListener(() {
         setState(() {
           currentPage = _controller.page;
-          print("Dragged on controller");
           main = Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -152,20 +154,27 @@ class _NewsState extends State<News> {
                         ],
                       ),
                     ),
-                    Stack(
-                      children: <Widget>[
-                        CardScrollWidget(currentPage, _posts),
-                        Positioned.fill(
-                          child: PageView.builder(
-                            itemCount: _posts.length,
-                            controller: _controller,
-                            reverse: true,
-                            itemBuilder: (context, index) {
-                              return Container();
-                            },
-                          ),
-                        )
-                      ],
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => PostWidget(
+                                reversed_posts[currentPage.round()])));
+                      },
+                      child: Stack(
+                        children: <Widget>[
+                          CardScrollWidget(currentPage, _posts),
+                          Positioned.fill(
+                            child: PageView.builder(
+                              itemCount: _posts.length,
+                              controller: _controller,
+                              reverse: true,
+                              itemBuilder: (context, index) {
+                                return Container();
+                              },
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -327,21 +336,27 @@ class _NewsState extends State<News> {
                     ],
                   ),
                 ),
-                Stack(
-                  children: <Widget>[
-                    //Text("data")
-                    CardScrollWidget(currentPage, _posts),
-                    Positioned.fill(
-                      child: PageView.builder(
-                        itemCount: _posts.length,
-                        controller: _controller,
-                        reverse: true,
-                        itemBuilder: (context, index) {
-                          return Container();
-                        },
-                      ),
-                    )
-                  ],
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) =>
+                            PostWidget(reversed_posts[currentPage.round()])));
+                  },
+                  child: Stack(
+                    children: <Widget>[
+                      CardScrollWidget(currentPage, _posts),
+                      Positioned.fill(
+                        child: PageView.builder(
+                          itemCount: _posts.length,
+                          controller: _controller,
+                          reverse: true,
+                          itemBuilder: (context, index) {
+                            return Container();
+                          },
+                        ),
+                      )
+                    ],
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.0),

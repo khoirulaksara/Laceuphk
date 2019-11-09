@@ -98,21 +98,16 @@ class CardScrollWidget extends StatelessWidget {
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: 12.0, bottom: 12.0),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        print("FUCK!");
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 22.0, vertical: 6.0),
-                                        decoration: BoxDecoration(
-                                            color: Colors.blueAccent,
-                                            borderRadius:
-                                                BorderRadius.circular(20.0)),
-                                        child: Text("Read More",
-                                            style:
-                                                TextStyle(color: Colors.white)),
-                                      ),
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 22.0, vertical: 6.0),
+                                      decoration: BoxDecoration(
+                                          color: Colors.blueAccent,
+                                          borderRadius:
+                                              BorderRadius.circular(20.0)),
+                                      child: Text("Read More",
+                                          style:
+                                              TextStyle(color: Colors.white)),
                                     ),
                                   )
                                 ],
