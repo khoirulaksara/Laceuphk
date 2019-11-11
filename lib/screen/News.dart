@@ -14,10 +14,12 @@ class News extends StatefulWidget {
 
 class _NewsState extends State<News> {
   var _posts = <Posts>[];
+  var _reviewPosts = <Posts>[];
   var reversed_posts;
   var currentPage;
   Container main;
   PageController _controller;
+  List<Widget> reviewPostWidget = new List();
 
   @override
   void initState() {
@@ -34,6 +36,7 @@ class _NewsState extends State<News> {
                 tileMode: TileMode.clamp)),
         child: Center(child: CircularProgressIndicator()));
     _loadData();
+    _loadData2();
   }
 
   @override
@@ -47,14 +50,42 @@ class _NewsState extends State<News> {
     return main;
   }
 
+  _loadData2() async {
+    const String dataURL2 = Strings.shoesReviewURL;
+    http.Response response2 = await http.get(dataURL2);
+
+    setState(() {
+      final postJSON2 = jsonDecode(response2.body);
+      for (var postJSON2 in postJSON2) {
+        // final posts2 = Posts(postJSON2['title'],
+        //     postJSON2["media"]["colormag-featured-image"], postJSON2["id"]);
+        // _reviewPosts.add(posts2);
+        var imgURL = (postJSON2["media"]["colormag-featured-image"])
+            .toString()
+            .replaceAll('54.254.148.234', 'laceuphk.com');
+            print(imgURL);
+        reviewPostWidget.add(Padding(
+          padding: EdgeInsets.only(left: 18.0),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20.0),
+            child: Image.network(imgURL, width: 296.0, height: 222.0),
+          ),
+        ));
+        //reversed_posts = _posts.reversed.toList();
+      }
+    });
+  }
+
   _loadData() async {
     const String dataURL = Strings.dataUrl;
     http.Response response = await http.get(dataURL);
+
     setState(() {
       final postJSON = jsonDecode(response.body);
+
       for (var postJSON in postJSON) {
-        final posts = Posts(
-            postJSON['title'], postJSON["media"]["colormag-featured-image"], postJSON["id"]);
+        final posts = Posts(postJSON['title'],
+            postJSON["media"]["colormag-featured-image"], postJSON["id"]);
         _posts.add(posts);
         reversed_posts = _posts.reversed.toList();
       }
@@ -181,7 +212,7 @@ class _NewsState extends State<News> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text("Editor's Pick",
+                          Text("Shoes Review",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 46.0,
@@ -228,17 +259,9 @@ class _NewsState extends State<News> {
                     SizedBox(
                       height: 20.0,
                     ),
-                    Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(left: 18.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20.0),
-                            child: Image.asset("lib/assets/images/image_02.jpg",
-                                width: 296.0, height: 222.0),
-                          ),
-                        )
-                      ],
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: reviewPostWidget,
                     )
                   ],
                 ))),
@@ -363,7 +386,7 @@ class _NewsState extends State<News> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text("Editor's Pick",
+                      Text("Shoes Review",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 46.0,
@@ -410,17 +433,9 @@ class _NewsState extends State<News> {
                 SizedBox(
                   height: 20.0,
                 ),
-                Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(left: 18.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20.0),
-                        child: Image.asset("lib/assets/images/image_02.jpg",
-                            width: 296.0, height: 222.0),
-                      ),
-                    )
-                  ],
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: reviewPostWidget,
                 )
               ],
             ))),
