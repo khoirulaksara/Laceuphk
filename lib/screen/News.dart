@@ -54,7 +54,7 @@ class _NewsState extends State<News> {
       final postJSON = jsonDecode(response.body);
       for (var postJSON in postJSON) {
         final posts = Posts(
-            postJSON['title'], postJSON["media"]["colormag-featured-image"]);
+            postJSON['title'], postJSON["media"]["colormag-featured-image"], postJSON["id"]);
         _posts.add(posts);
         reversed_posts = _posts.reversed.toList();
       }

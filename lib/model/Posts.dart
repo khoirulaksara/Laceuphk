@@ -2,8 +2,9 @@ class Posts{
   final String title;
   //final String content;
   final String imageurl;
+  final int postId;
 
-  Posts(this.title, this.imageurl){
+  Posts(this.title, this.imageurl, this.postId){
     if (title == null) {
       throw new ArgumentError("title of Posts cannot be null. "
           "Received: '$title'");
@@ -15,6 +16,11 @@ class Posts{
     if (imageurl == null) {
       throw new ArgumentError("imageurl of Posts cannot be null. "
           "Received: '$imageurl'");
+    }
+
+    if (postId == null) {
+      throw new ArgumentError("postId of Posts cannot be null. "
+          "Received: '$postId'");
     }
   }
 }

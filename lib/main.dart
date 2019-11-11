@@ -28,7 +28,7 @@ class MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'LaceupHK',
       theme: ThemeData(
-        primarySwatch: Colors.cyan,
+        primaryColor: Color(0xFF2d3447),
       ),
       home: Scaffold(
           body: _pageOptions[_selectedPage],
