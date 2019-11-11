@@ -1,14 +1,13 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import '../model/Posts.dart';
 import '../utils/wp-api.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:html/parser.dart';
 
 class PostState extends State<PostWidget> {
   final Posts posts;
-  String result;
+  var result;
   Scaffold main;
   PostState(this.posts);
 
@@ -27,7 +26,7 @@ class PostState extends State<PostWidget> {
     http.Response response = await http.get(contentLink);
     setState(() {
       final postJSON = jsonDecode(response.body);
-      result = postJSON["content"];
+      result = parse(postJSON["content"]);
       main = Scaffold(
         backgroundColor: Color(0xFF2d3447),
         appBar: AppBar(
@@ -39,8 +38,11 @@ class PostState extends State<PostWidget> {
             padding: EdgeInsets.all(16.0),
             child: Column(children: [
               Image.network(posts.imageurl),
+              SizedBox(
+                height: 20,
+              ),
               Text(
-                result,
+                result.documentElement.text.toString(),
                 style: TextStyle(color: Colors.white)
                 )
             ]),
