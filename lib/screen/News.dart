@@ -46,7 +46,35 @@ class _NewsState extends State<News> {
 
   @override
   Widget build(BuildContext context) {
-    return main;
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("LaceupHK"),
+        elevation: 0.0,
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: Icon(
+                CustomIcons.menu,
+                color: Colors.white,
+                size: 30.0,
+              ),
+              onPressed: () {},
+            );
+          },
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.search,
+              color: Colors.white,
+              size: 30,
+            ),
+            onPressed: () {},
+          )
+        ],
+      ),
+      body: main,
+    );
   }
 
   setUI() {
@@ -67,31 +95,6 @@ class _NewsState extends State<News> {
           body: SingleChildScrollView(
               child: Column(
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 12, right: 12, top: 30, bottom: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    IconButton(
-                      icon: Icon(
-                        CustomIcons.menu,
-                        color: Colors.white,
-                        size: 30.0,
-                      ),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.search,
-                        color: Colors.white,
-                        size: 30,
-                      ),
-                      onPressed: () {},
-                    )
-                  ],
-                ),
-              ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
@@ -238,12 +241,34 @@ class _NewsState extends State<News> {
           final posts2 = Posts(postJSON2['title'], imgURL, postJSON2["id"]);
           _reviewPosts.add(posts2);
 
-          reviewPostWidget.add(Padding(
-            padding: EdgeInsets.only(left: 18.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20.0),
-              child: Image.network(imgURL, width: 296.0, height: 222.0),
+          reviewPostWidget.add(GestureDetector(
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => PostWidget(posts2)));
+            },
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.only(left: 18.0),
+                child: Container(
+                  height: 200,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(30.0),
+                    child: Image.network(imgURL, fit: BoxFit.cover),
+                  ),
+                ),
+              ),
             ),
+          ));
+          reviewPostWidget.add(Padding(
+            padding: const EdgeInsets.only(left: 18.0),
+            child: Text(
+              postJSON2['title'],
+              style: TextStyle(color: Colors.white),
+            ),
+          ));
+          reviewPostWidget.add(SizedBox(
+            height: 20.0,
           ));
         } else {
           final posts2 = Posts(
