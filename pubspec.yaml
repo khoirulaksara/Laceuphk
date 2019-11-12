@@ -22,6 +22,7 @@ dependencies:
   flutter_screenutil:
   http:
   html:
+  flutter_html:
   flutter_spinkit: "^4.0.0"
   # https://github.com/jogboms/flutter_spinkit
 

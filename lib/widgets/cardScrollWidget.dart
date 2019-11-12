@@ -52,7 +52,7 @@ class CardScrollWidget extends StatelessWidget {
                 child: GestureDetector(
                   onTap: (){print("object");},
                   child: Container(
-                    decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                    decoration: BoxDecoration(color: Color(0xFF1b1e44), boxShadow: [
                       BoxShadow(
                           color: Colors.black12,
                           offset: Offset(3.0, 6.0),

@@ -3,21 +3,24 @@ import '../model/Posts.dart';
 import '../utils/wp-api.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:html/parser.dart';
+import 'package:html/dom.dart' as dom;
+import 'package:flutter_html/flutter_html.dart';
+
 
 class PostState extends State<PostWidget> {
   final Posts posts;
-  var result;
+  String nResult; 
   Scaffold main;
   PostState(this.posts);
+  List<Image> gallery = new List();
+  dom.Node k;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     main = Scaffold(
-      backgroundColor: Color(0xFF2d3447),
-      body: Center(child: CircularProgressIndicator())
-    );
+        backgroundColor: Color(0xFF2d3447),
+        body: Center(child: CircularProgressIndicator()));
     _loadContent();
   }
 
@@ -26,28 +29,26 @@ class PostState extends State<PostWidget> {
     http.Response response = await http.get(contentLink);
     setState(() {
       final postJSON = jsonDecode(response.body);
-      result = parse(postJSON["content"]);
+      nResult = postJSON["content"];
       main = Scaffold(
-        backgroundColor: Color(0xFF2d3447),
-        appBar: AppBar(
-          title: Text(posts.title),
-          elevation: 0.0,
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(children: [
-              Image.network(posts.imageurl),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                result.documentElement.text.toString(),
-                style: TextStyle(color: Colors.white)
-                )
-            ]),
+          backgroundColor: Color(0xFF2d3447),
+          appBar: AppBar(
+            title: Text(posts.title),
+            elevation: 0.0,
           ),
-        ));
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(children: [
+                Image.network(posts.imageurl),
+                SizedBox(
+                  height: 20,
+                ),
+                //Text(textResult, style: TextStyle(color: Colors.white)),
+                Html(data: nResult, defaultTextStyle: TextStyle(color: Colors.white),),        
+              ]),
+            ),
+          ));
     });
   }
 

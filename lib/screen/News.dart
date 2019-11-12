@@ -52,17 +52,6 @@ class _NewsState extends State<News> {
   setUI() {
     print("Setting UI");
 
-    for (int k = 0; k < 10; k++) {
-      reviewPostWidget.add(Padding(
-        padding: EdgeInsets.only(left: 18.0),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20.0),
-          child: Image.network(_reviewPosts[k].imageurl,
-              width: 296.0, height: 222.0),
-        ),
-      ));
-    }
-
     main = Container(
       decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -248,6 +237,14 @@ class _NewsState extends State<News> {
               .replaceAll('54.254.148.234', 'laceuphk.com');
           final posts2 = Posts(postJSON2['title'], imgURL, postJSON2["id"]);
           _reviewPosts.add(posts2);
+
+          reviewPostWidget.add(Padding(
+            padding: EdgeInsets.only(left: 18.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20.0),
+              child: Image.network(imgURL, width: 296.0, height: 222.0),
+            ),
+          ));
         } else {
           final posts2 = Posts(
               postJSON2['title'],
