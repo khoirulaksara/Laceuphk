@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_laceuphk/widgets/cardScrollWidget.dart';
 import 'package:flutter_laceuphk/widgets/postWidget.dart';
@@ -20,6 +21,17 @@ class _NewsState extends State<News> {
   Container main;
   PageController _controller;
   List<Widget> reviewPostWidget = new List();
+  final TextEditingController _filter = new TextEditingController();
+  final dio = new Dio();
+  String _searchText = "";
+  //List names = new List(); // names we get from API
+  List filteredNames = new List(); // names filtered by search text
+  Icon _searchIcon = new Icon(
+    Icons.search,
+    color: Colors.white,
+    size: 30,
+  );
+  Widget _appBarTitle = new Text('LaceupHK');
 
   @override
   void initState() {
@@ -48,7 +60,7 @@ class _NewsState extends State<News> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("LaceupHK"),
+        title: _appBarTitle,
         elevation: 0.0,
         leading: Builder(
           builder: (BuildContext context) {
@@ -64,17 +76,53 @@ class _NewsState extends State<News> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(
-              Icons.search,
-              color: Colors.white,
-              size: 30,
-            ),
-            onPressed: () {},
+            icon: _searchIcon,
+            onPressed: () {
+              _searchPressed();
+            },
           )
         ],
       ),
       body: main,
     );
+  }
+
+  SearchState() {
+    _filter.addListener(() {
+      if (_filter.text.isEmpty) {
+        setState(() {
+          _searchText = "";
+          //filteredNames = names;
+        });
+      } else {
+        setState(() {
+          _searchText = _filter.text;
+        });
+      }
+    });
+  }
+
+  _searchPressed() {
+    setState(() {
+      if (this._searchIcon.icon == Icons.search) {
+        this._searchIcon = new Icon(Icons.close);
+        this._appBarTitle = new TextField(
+          controller: _filter,
+          decoration: new InputDecoration(
+            prefixIcon: IconTheme(
+                data: new IconThemeData(color: Colors.white),
+                child: new Icon(Icons.search)),
+            hintText: 'Search...',
+            hintStyle: TextStyle(color: Colors.white),
+          ),
+        );
+      } else {
+        this._searchIcon = new Icon(Icons.search);
+        this._appBarTitle = new Text('LaceupHK');
+        //filteredNames = names;
+        //_filter.clear();
+      }
+    });
   }
 
   setUI() {

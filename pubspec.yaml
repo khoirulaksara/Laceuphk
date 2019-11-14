@@ -20,6 +20,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_screenutil:
+  dio: 1.0.0
   http:
   html:
   flutter_html:
