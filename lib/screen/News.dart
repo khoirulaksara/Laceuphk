@@ -16,6 +16,7 @@ class News extends StatefulWidget {
 class _NewsState extends State<News> {
   var _posts = <Posts>[];
   var _reviewPosts = <Posts>[];
+  var _searchPosts = <Posts>[];
   var reversedPosts;
   var currentPage;
   Container main;
@@ -105,20 +106,23 @@ class _NewsState extends State<News> {
   _searchPressed() {
     setState(() {
       if (this._searchIcon.icon == Icons.search) {
-        this._searchIcon = new Icon(Icons.close);
-        this._appBarTitle = new TextField(
-          controller: _filter,
-          decoration: new InputDecoration(
-            prefixIcon: IconTheme(
-                data: new IconThemeData(color: Colors.white),
-                child: new Icon(Icons.search)),
-            hintText: 'Search...',
-            hintStyle: TextStyle(color: Colors.white),
-          ),
-        );
+        this._searchIcon = Icon(Icons.close);
+        this._appBarTitle = TextField(
+            style: TextStyle(color: Colors.white),
+            controller: _filter,
+            decoration: InputDecoration(
+              prefixIcon: IconTheme(
+                  data: IconThemeData(color: Colors.white),
+                  child: Icon(Icons.search)),
+              hintText: 'Search...',
+              hintStyle: TextStyle(color: Colors.grey),
+            ),
+            onSubmitted: (value) {
+              print(Strings.searchURL + value + "&content=false");
+            });
       } else {
-        this._searchIcon = new Icon(Icons.search);
-        this._appBarTitle = new Text('LaceupHK');
+        this._searchIcon = Icon(Icons.search);
+        this._appBarTitle = Text('LaceupHK');
         //filteredNames = names;
         //_filter.clear();
       }
@@ -274,6 +278,17 @@ class _NewsState extends State<News> {
             ],
           ))),
     );
+  }
+
+  _search(String keyword) async {
+    String searchURL = Strings.searchURL + keyword + "&content=false";
+    http.Response response = await http.get(searchURL);
+    final resultJSON = jsonDecode(response.body);
+    for (var resultJSON in resultJSON) {
+      final post = Posts(resultJSON['title'],
+          resultJSON["media"]["colormag-featured-image"], resultJSON["id"]);
+      _searchPosts.add(post);
+    }
   }
 
   _loadData2() async {
