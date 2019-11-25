@@ -22,11 +22,7 @@ class _NewsState extends State<News> {
   Container main;
   PageController _controller;
   List<Widget> reviewPostWidget = new List();
-  final TextEditingController _filter = new TextEditingController();
   final dio = new Dio();
-  String _searchText = "";
-  //List names = new List(); // names we get from API
-  List filteredNames = new List(); // names filtered by search text
   Icon _searchIcon = new Icon(
     Icons.search,
     color: Colors.white,
@@ -88,28 +84,12 @@ class _NewsState extends State<News> {
     );
   }
 
-  SearchState() {
-    _filter.addListener(() {
-      if (_filter.text.isEmpty) {
-        setState(() {
-          _searchText = "";
-          //filteredNames = names;
-        });
-      } else {
-        setState(() {
-          _searchText = _filter.text;
-        });
-      }
-    });
-  }
-
   _searchPressed() {
     setState(() {
       if (this._searchIcon.icon == Icons.search) {
         this._searchIcon = Icon(Icons.close);
         this._appBarTitle = TextField(
             style: TextStyle(color: Colors.white),
-            controller: _filter,
             decoration: InputDecoration(
               prefixIcon: IconTheme(
                   data: IconThemeData(color: Colors.white),
@@ -118,13 +98,15 @@ class _NewsState extends State<News> {
               hintStyle: TextStyle(color: Colors.grey),
             ),
             onSubmitted: (value) {
+              setState(() {
+                main = Container(
+                    child: Center(child: CircularProgressIndicator()));
+              });
               print(Strings.searchURL + value + "&content=false");
             });
       } else {
         this._searchIcon = Icon(Icons.search);
         this._appBarTitle = Text('LaceupHK');
-        //filteredNames = names;
-        //_filter.clear();
       }
     });
   }
@@ -289,6 +271,9 @@ class _NewsState extends State<News> {
           resultJSON["media"]["colormag-featured-image"], resultJSON["id"]);
       _searchPosts.add(post);
     }
+    setState(() {
+      main = Container();
+    });
   }
 
   _loadData2() async {
