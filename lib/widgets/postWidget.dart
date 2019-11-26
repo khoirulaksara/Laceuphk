@@ -6,10 +6,9 @@ import 'dart:convert';
 import 'package:html/dom.dart' as dom;
 import 'package:flutter_html/flutter_html.dart';
 
-
 class PostState extends State<PostWidget> {
   final Posts posts;
-  String nResult; 
+  String nResult;
   Scaffold main;
   PostState(this.posts);
   List<Image> gallery = new List();
@@ -29,26 +28,39 @@ class PostState extends State<PostWidget> {
     http.Response response = await http.get(contentLink);
     setState(() {
       final postJSON = jsonDecode(response.body);
-      nResult = postJSON["content"];
-      main = Scaffold(
-          backgroundColor: Color(0xFF2d3447),
-          appBar: AppBar(
-            title: Text(posts.title),
-            elevation: 0.0,
-          ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Column(children: [
-                Image.network(posts.imageurl),
-                SizedBox(
-                  height: 20,
-                ),
-                //Text(textResult, style: TextStyle(color: Colors.white)),
-                Html(data: nResult, defaultTextStyle: TextStyle(color: Colors.white),),        
-              ]),
+      if (postJSON.toString() != "[]") {
+        nResult = postJSON["content"];
+        main = Scaffold(
+            backgroundColor: Color(0xFF2d3447),
+            appBar: AppBar(
+              title: Text(posts.title),
+              elevation: 0.0,
             ),
-          ));
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(children: [
+                  Image.network(posts.imageurl),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  //Text(textResult, style: TextStyle(color: Colors.white)),
+                  Html(
+                    data: nResult,
+                    defaultTextStyle: TextStyle(color: Colors.white),
+                  ),
+                ]),
+              ),
+            ));
+      } else {
+        main = Scaffold(
+            backgroundColor: Color(0xFF2d3447),
+            appBar: AppBar(
+              title: Text(posts.title),
+              elevation: 0.0,
+            ),
+            body: Center(child: Text("No Content")));
+      }
     });
   }
 

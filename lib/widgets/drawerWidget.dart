@@ -5,7 +5,6 @@ class DrawerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("object");
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,

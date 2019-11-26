@@ -50,7 +50,6 @@ class CardScrollWidget extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16.0),
                 child: GestureDetector(
-                  onTap: (){print("object");},
                   child: Container(
                     decoration: BoxDecoration(color: Color(0xFF1b1e44), boxShadow: [
                       BoxShadow(
@@ -64,7 +63,6 @@ class CardScrollWidget extends StatelessWidget {
                         fit: StackFit.expand,
                         children: <Widget>[
                           GestureDetector(
-                            onTap: (){print("object");},
                             child: Image.network(_posts[postContoll].imageurl,
                                 fit: BoxFit.cover),
                           ),

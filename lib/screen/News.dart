@@ -23,19 +23,15 @@ class _NewsState extends State<News> {
   var currentPage;
   Container main;
   PageController _controller;
-  List<Widget> reviewPostWidget = new List();
+  List<Widget> reviewPostWidget = List();
+  List<Widget> resultList = List();
   final dio = new Dio();
   Icon _searchIcon = new Icon(
     Icons.search,
     color: Colors.white,
     size: 30,
   );
-  Widget _appBarTitle = IconButton(
-    icon: Text("L"),
-    onPressed: () {
-      print("test");
-    },
-  );
+  Widget _appBarTitle = Text("LaceupHK");
 
   @override
   void initState() {
@@ -102,11 +98,9 @@ class _NewsState extends State<News> {
               _search(value);
             });
       } else {
+        setUI();
         this._searchIcon = Icon(Icons.search);
-        this._appBarTitle = IconButton(
-          icon: Text("L"),
-          onPressed: setUI(),
-        );
+        this._appBarTitle = Text("LaceupHK");
       }
     });
   }
@@ -261,29 +255,47 @@ class _NewsState extends State<News> {
   }
 
   _search(String keyword) async {
+    while (resultList.length != 0) {
+      resultList.removeLast();
+    }
+    while (_searchPosts.length != 0) {
+      _searchPosts.removeLast();
+    }
     print(Strings.searchURL + keyword + "&content=false");
     String searchURL = Strings.searchURL + keyword + "&content=false";
     http.Response response = await http.get(searchURL);
     final resultJSON = jsonDecode(response.body);
-    for (var resultJSON in resultJSON) {
-      if (resultJSON["media"].toString() != "false") {
-        var imgURL = (resultJSON["media"]["colormag-featured-image"])
-            .toString()
-            .replaceAll('54.254.148.234', 'laceuphk.com');
-        final post = Posts(resultJSON['title'], imgURL, resultJSON["id"]);
-        _searchPosts.add(post);
-      } else {
-        final post = Posts(
-            resultJSON['title'],
-            "https://icon-library.net/images/no-image-available-icon/no-image-available-icon-6.jpg",
-            resultJSON["id"]);
-        _searchPosts.add(post);
+    if (resultJSON.toString() == "[]") {
+      print("No Search Result");
+      resultList.add(Center(
+        child: Text("No result"),
+      ));
+    } else {
+      int i = 0;
+      for (var resultJSON in resultJSON) {
+        if (resultJSON["media"].toString() != "false") {
+          var imgURL = (resultJSON["media"]["colormag-featured-image"])
+              .toString()
+              .replaceAll('54.254.148.234', 'laceuphk.com');
+          final post = Posts(resultJSON['title'], imgURL, resultJSON["id"]);
+          _searchPosts.add(post);
+          resultList.add(SearchResultWidget(_searchPosts[i]));
+          i++;
+        } else {
+          final post = Posts(
+              resultJSON['title'],
+              "https://icon-library.net/images/no-image-available-icon/no-image-available-icon-6.jpg",
+              resultJSON["id"]);
+          _searchPosts.add(post);
+        }
       }
     }
     setState(() {
       main = Container(
-        child: SearchResultWidget(_searchPosts[0]),
-      );
+          color: Color(0xFF2d3447),
+          child: ListView(
+            children: resultList,
+          ));
     });
   }
 
