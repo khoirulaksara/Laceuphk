@@ -7,6 +7,8 @@ import 'dart:convert';
 import '../utils/wp-api.dart';
 import '../model/Posts.dart';
 import '../widgets/customIcons.dart';
+import '../widgets/searchResultWidget.dart';
+import '../widgets/drawerWidget.dart';
 
 class News extends StatefulWidget {
   @override
@@ -28,7 +30,12 @@ class _NewsState extends State<News> {
     color: Colors.white,
     size: 30,
   );
-  Widget _appBarTitle = new Text('LaceupHK');
+  Widget _appBarTitle = IconButton(
+    icon: Text("L"),
+    onPressed: () {
+      print("test");
+    },
+  );
 
   @override
   void initState() {
@@ -59,18 +66,6 @@ class _NewsState extends State<News> {
       appBar: AppBar(
         title: _appBarTitle,
         elevation: 0.0,
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: Icon(
-                CustomIcons.menu,
-                color: Colors.white,
-                size: 30.0,
-              ),
-              onPressed: () {},
-            );
-          },
-        ),
         actions: <Widget>[
           IconButton(
             icon: _searchIcon,
@@ -81,6 +76,7 @@ class _NewsState extends State<News> {
         ],
       ),
       body: main,
+      drawer: DrawerWidget(),
     );
   }
 
@@ -100,20 +96,22 @@ class _NewsState extends State<News> {
             onSubmitted: (value) {
               setState(() {
                 main = Container(
+                    color: Color(0xFF2d3447),
                     child: Center(child: CircularProgressIndicator()));
               });
-              print(Strings.searchURL + value + "&content=false");
+              _search(value);
             });
       } else {
         this._searchIcon = Icon(Icons.search);
-        this._appBarTitle = Text('LaceupHK');
+        this._appBarTitle = IconButton(
+          icon: Text("L"),
+          onPressed: setUI(),
+        );
       }
     });
   }
 
   setUI() {
-    print("Setting UI");
-
     main = Container(
       decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -263,16 +261,29 @@ class _NewsState extends State<News> {
   }
 
   _search(String keyword) async {
+    print(Strings.searchURL + keyword + "&content=false");
     String searchURL = Strings.searchURL + keyword + "&content=false";
     http.Response response = await http.get(searchURL);
     final resultJSON = jsonDecode(response.body);
     for (var resultJSON in resultJSON) {
-      final post = Posts(resultJSON['title'],
-          resultJSON["media"]["colormag-featured-image"], resultJSON["id"]);
-      _searchPosts.add(post);
+      if (resultJSON["media"].toString() != "false") {
+        var imgURL = (resultJSON["media"]["colormag-featured-image"])
+            .toString()
+            .replaceAll('54.254.148.234', 'laceuphk.com');
+        final post = Posts(resultJSON['title'], imgURL, resultJSON["id"]);
+        _searchPosts.add(post);
+      } else {
+        final post = Posts(
+            resultJSON['title'],
+            "https://icon-library.net/images/no-image-available-icon/no-image-available-icon-6.jpg",
+            resultJSON["id"]);
+        _searchPosts.add(post);
+      }
     }
     setState(() {
-      main = Container();
+      main = Container(
+        child: SearchResultWidget(_searchPosts[0]),
+      );
     });
   }
 
