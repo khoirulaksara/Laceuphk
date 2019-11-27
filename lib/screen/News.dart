@@ -9,6 +9,7 @@ import '../model/Posts.dart';
 import '../widgets/customIcons.dart';
 import '../widgets/searchResultWidget.dart';
 import '../widgets/drawerWidget.dart';
+import '../utils/wp-api.dart';
 
 class News extends StatefulWidget {
   @override
@@ -72,7 +73,7 @@ class _NewsState extends State<News> {
         ],
       ),
       body: main,
-      drawer: DrawerWidget(),
+      //drawer: DrawerWidget(),
     );
   }
 
@@ -262,7 +263,7 @@ class _NewsState extends State<News> {
       _searchPosts.removeLast();
     }
     print(Strings.searchURL + keyword + "&content=false");
-    String searchURL = Strings.searchURL + keyword + "&content=false";
+    String searchURL = Strings.searchURL + keyword + "&content=false&page=1&per_page=100";
     http.Response response = await http.get(searchURL);
     final resultJSON = jsonDecode(response.body);
     if (resultJSON.toString() == "[]") {
@@ -353,7 +354,8 @@ class _NewsState extends State<News> {
   }
 
   _loadData() async {
-    const String dataURL = Strings.dataUrl;
+    await Strings.loadURL();
+    String dataURL = Strings.dataUrl;
     http.Response response = await http.get(dataURL);
     await _loadData2();
     setState(() {
