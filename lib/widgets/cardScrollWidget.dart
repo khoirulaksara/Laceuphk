@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-var cardAspectRatio = 12.0 / 16.0;
+var cardAspectRatio = 12.0 / 14.0;
 var widgetAspectRatio = cardAspectRatio * 1.2;
 
 class CardScrollWidget extends StatelessWidget {
@@ -86,7 +86,7 @@ class CardScrollWidget extends StatelessWidget {
                                       child: Text(_posts[postContoll].title,
                                           style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 25.0,
+                                              fontSize: 15.0,
                                               fontFamily: "SF-Pro-Text-Regular")),
                                     ),
                                   ),
