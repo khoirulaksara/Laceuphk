@@ -131,7 +131,7 @@ class _NewsState extends State<News> {
                       "News",
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 46,
+                          fontSize: 35,
                           fontFamily: "Calibre-Semibold",
                           letterSpacing: 1),
                     ),
@@ -202,7 +202,7 @@ class _NewsState extends State<News> {
                     Text("Shoes Review",
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 46.0,
+                          fontSize: 35.0,
                           fontFamily: "Calibre-Semibold",
                           letterSpacing: 1.0,
                         )),
