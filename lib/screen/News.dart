@@ -9,7 +9,6 @@ import '../model/Posts.dart';
 import '../widgets/customIcons.dart';
 import '../widgets/searchResultWidget.dart';
 import '../widgets/drawerWidget.dart';
-import '../utils/wp-api.dart';
 
 class News extends StatefulWidget {
   @override
@@ -17,11 +16,13 @@ class News extends StatefulWidget {
 }
 
 class _NewsState extends State<News> {
-  var _posts = <Posts>[];
-  var _reviewPosts = <Posts>[];
-  var _searchPosts = <Posts>[];
+  var _firstCatPosts = <Posts>[];
+  var _secondCatPosts = <Posts>[];
+  var _searchResultPosts = <Posts>[];
   var reversedPosts;
   var currentPage;
+  var pageNumber = 1;
+  var searchResultPageNumber = 1;
   Container main;
   PageController _controller;
   List<Widget> reviewPostWidget = List();
@@ -32,7 +33,7 @@ class _NewsState extends State<News> {
     color: Colors.white,
     size: 30,
   );
-  Widget _appBarTitle = Text("LaceupHK");
+  Widget _appBarTitle = Text(WordpressApi.appTitle);
 
   @override
   void initState() {
@@ -77,6 +78,23 @@ class _NewsState extends State<News> {
     );
   }
 
+  _refreshPage() {
+    setState(() {
+      main = Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [
+                Color(0xFF1b1e44),
+                Color(0xFF2d3447),
+              ],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  tileMode: TileMode.clamp)),
+          child: Center(child: CircularProgressIndicator()));
+      _loadData();
+    });
+  }
+
   _searchPressed() {
     setState(() {
       if (this._searchIcon.icon == Icons.search) {
@@ -101,7 +119,7 @@ class _NewsState extends State<News> {
       } else {
         setUI();
         this._searchIcon = Icon(Icons.search);
-        this._appBarTitle = Text("LaceupHK");
+        this._appBarTitle = Text(WordpressApi.appTitle);
       }
     });
   }
@@ -128,7 +146,7 @@ class _NewsState extends State<News> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      "News",
+                      WordpressApi.firstTitle,
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 35,
@@ -141,7 +159,13 @@ class _NewsState extends State<News> {
                         size: 12,
                         color: Colors.white,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          pageNumber++;
+                          _loadData();
+                          setUI();
+                        });
+                      },
                     )
                   ],
                 ),
@@ -159,7 +183,7 @@ class _NewsState extends State<News> {
                         child: Padding(
                           padding:
                               EdgeInsets.symmetric(horizontal: 22, vertical: 6),
-                          child: Text("Latest",
+                          child: Text(WordpressApi.firstSubtitle1,
                               style: TextStyle(color: Colors.white)),
                         ),
                       ),
@@ -167,7 +191,7 @@ class _NewsState extends State<News> {
                     SizedBox(
                       width: 15,
                     ),
-                    Text("10 Stories",
+                    Text(WordpressApi.firstSubtitle2,
                         style: TextStyle(color: Colors.blueAccent))
                   ],
                 ),
@@ -180,10 +204,10 @@ class _NewsState extends State<News> {
                 },
                 child: Stack(
                   children: <Widget>[
-                    CardScrollWidget(currentPage, _posts),
+                    CardScrollWidget(currentPage, _firstCatPosts),
                     Positioned.fill(
                       child: PageView.builder(
-                        itemCount: _posts.length,
+                        itemCount: _firstCatPosts.length,
                         controller: _controller,
                         reverse: true,
                         itemBuilder: (context, index) {
@@ -199,21 +223,24 @@ class _NewsState extends State<News> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text("Shoes Review",
+                    Text(WordpressApi.specialTitle,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 35.0,
                           fontFamily: "Calibre-Semibold",
                           letterSpacing: 1.0,
                         )),
-                    IconButton(
-                      icon: Icon(
-                        CustomIcons.option,
-                        size: 12.0,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {},
-                    )
+                    // No function for iconbutton at this moment, so temp hide here
+                    // IconButton(
+                    //   icon: Icon(
+                    //     CustomIcons.option,
+                    //     size: 12.0,
+                    //     color: Colors.white,
+                    //   ),
+                    //   onPressed: () {
+                    //     print("Test 2");
+                    //   },
+                    // )
                   ],
                 ),
               ),
@@ -230,7 +257,7 @@ class _NewsState extends State<News> {
                         child: Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: 22.0, vertical: 6.0),
-                          child: Text("Most Viewed",
+                          child: Text(WordpressApi.specialSubtitle1,
                               style: TextStyle(color: Colors.white)),
                         ),
                       ),
@@ -238,7 +265,7 @@ class _NewsState extends State<News> {
                     SizedBox(
                       width: 15.0,
                     ),
-                    Text("9+ Stories",
+                    Text(WordpressApi.specialSubtitle2,
                         style: TextStyle(color: Colors.blueAccent))
                   ],
                 ),
@@ -259,11 +286,13 @@ class _NewsState extends State<News> {
     while (resultList.length != 0) {
       resultList.removeLast();
     }
-    while (_searchPosts.length != 0) {
-      _searchPosts.removeLast();
+    while (_searchResultPosts.length != 0) {
+      _searchResultPosts.removeLast();
     }
-    print(Strings.searchURL + keyword + "&content=false");
-    String searchURL = Strings.searchURL + keyword + "&content=false&page=1&per_page=100";
+    String searchURL = WordpressApi.searchURL
+        .replaceAll('keyword', keyword)
+        .replaceAll('*', searchResultPageNumber.toString());
+    print("The search url is: " + searchURL);
     http.Response response = await http.get(searchURL);
     final resultJSON = jsonDecode(response.body);
     if (resultJSON.toString() == "[]") {
@@ -279,15 +308,15 @@ class _NewsState extends State<News> {
               .toString()
               .replaceAll('54.254.148.234', 'laceuphk.com');
           final post = Posts(resultJSON['title'], imgURL, resultJSON["id"]);
-          _searchPosts.add(post);
-          resultList.add(SearchResultWidget(_searchPosts[i]));
+          _searchResultPosts.add(post);
+          resultList.add(SearchResultWidget(_searchResultPosts[i]));
           i++;
         } else {
           final post = Posts(
               resultJSON['title'],
               "https://icon-library.net/images/no-image-available-icon/no-image-available-icon-6.jpg",
               resultJSON["id"]);
-          _searchPosts.add(post);
+          _searchResultPosts.add(post);
         }
       }
     }
@@ -301,7 +330,7 @@ class _NewsState extends State<News> {
   }
 
   _loadData2() async {
-    const String dataURL2 = Strings.shoesReviewURL;
+    String dataURL2 = WordpressApi.specialTitleURL;
     http.Response response2 = await http.get(dataURL2);
     setState(() {
       final postJSON2 = jsonDecode(response2.body);
@@ -311,63 +340,72 @@ class _NewsState extends State<News> {
               .toString()
               .replaceAll('54.254.148.234', 'laceuphk.com');
           final posts2 = Posts(postJSON2['title'], imgURL, postJSON2["id"]);
-          _reviewPosts.add(posts2);
+          _secondCatPosts.add(posts2);
 
           reviewPostWidget.add(GestureDetector(
             onTap: () {
               Navigator.of(context)
                   .push(MaterialPageRoute(builder: (_) => PostWidget(posts2)));
             },
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: EdgeInsets.only(left: 18.0),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15.0),
                 child: Container(
-                  height: 200,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(30.0),
-                    child: Image.network(imgURL, fit: BoxFit.cover),
-                  ),
-                ),
+                    decoration: BoxDecoration(
+                        color: Color(0xFF1b1e44),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black12,
+                              offset: Offset(3.0, 6.0),
+                              blurRadius: 10.0)
+                        ]),
+                    child: Stack(children: <Widget>[
+                      Image.network(imgURL, fit: BoxFit.cover),
+                      Positioned(
+                        left: 8,
+                        bottom: 8,
+                        child: Text(
+                          postJSON2['title'],
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ])),
               ),
             ),
-          ));
-          reviewPostWidget.add(Padding(
-            padding: const EdgeInsets.only(left: 18.0),
-            child: Text(
-              postJSON2['title'],
-              style: TextStyle(color: Colors.white),
-            ),
-          ));
-          reviewPostWidget.add(SizedBox(
-            height: 20.0,
           ));
         } else {
           final posts2 = Posts(
               postJSON2['title'],
               "https://icon-library.net/images/no-image-available-icon/no-image-available-icon-6.jpg",
               postJSON2["id"]);
-          _reviewPosts.add(posts2);
+          _secondCatPosts.add(posts2);
         }
       }
     });
   }
 
   _loadData() async {
-    await Strings.loadURL();
-    String dataURL = Strings.dataUrl;
+    while (_firstCatPosts.length != 0) {
+      _firstCatPosts.removeLast();
+    }
+    await WordpressApi.loadURL();
+    String dataURL =
+        WordpressApi.firstTitleUrl.replaceAll('*', pageNumber.toString());
+    print("URL after replace string is: " + dataURL);
     http.Response response = await http.get(dataURL);
     await _loadData2();
     setState(() {
+      this._appBarTitle = Text(WordpressApi.appTitle);
       final postJSON = jsonDecode(response.body);
       for (var postJSON in postJSON) {
         final posts = Posts(postJSON['title'],
             postJSON["media"]["colormag-featured-image"], postJSON["id"]);
-        _posts.add(posts);
-        reversedPosts = _posts.reversed.toList();
+        _firstCatPosts.add(posts);
+        reversedPosts = _firstCatPosts.reversed.toList();
       }
-      _controller = PageController(initialPage: _posts.length - 1);
-      currentPage = _posts.length - 1.0;
+      _controller = PageController(initialPage: _firstCatPosts.length - 1);
+      currentPage = _firstCatPosts.length - 1.0;
       _controller.addListener(() {
         setState(() {
           currentPage = _controller.page;

@@ -1,4 +1,4 @@
-class Posts{
+class Posts {
   final String title;
   //final String content;
   final String imageurl;

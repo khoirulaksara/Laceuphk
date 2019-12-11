@@ -24,7 +24,7 @@ class PostState extends State<PostWidget> {
   }
 
   _loadContent() async {
-    var contentLink = Strings.contentURL + posts.postId.toString();
+    var contentLink = WordpressApi.contentURL + posts.postId.toString();
     http.Response response = await http.get(contentLink);
     setState(() {
       final postJSON = jsonDecode(response.body);
