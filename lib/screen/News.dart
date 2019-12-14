@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_laceuphk/widgets/cardScrollWidget.dart';
 import 'package:flutter_laceuphk/widgets/postWidget.dart';
@@ -8,6 +7,8 @@ import '../utils/wp-api.dart';
 import '../model/Posts.dart';
 import '../widgets/customIcons.dart';
 import '../widgets/searchResultWidget.dart';
+
+// To implement the drawer in next version
 import '../widgets/drawerWidget.dart';
 
 class News extends StatefulWidget {
@@ -27,7 +28,6 @@ class _NewsState extends State<News> {
   PageController _controller;
   List<Widget> reviewPostWidget = List();
   List<Widget> resultList = List();
-  final dio = new Dio();
   Icon _searchIcon = new Icon(
     Icons.search,
     color: Colors.white,
@@ -78,23 +78,6 @@ class _NewsState extends State<News> {
     );
   }
 
-  _refreshPage() {
-    setState(() {
-      main = Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [
-                Color(0xFF1b1e44),
-                Color(0xFF2d3447),
-              ],
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  tileMode: TileMode.clamp)),
-          child: Center(child: CircularProgressIndicator()));
-      _loadData();
-    });
-  }
-
   _searchPressed() {
     setState(() {
       if (this._searchIcon.icon == Icons.search) {
@@ -137,148 +120,154 @@ class _NewsState extends State<News> {
               tileMode: TileMode.clamp)),
       child: Scaffold(
           backgroundColor: Colors.transparent,
-          body: SingleChildScrollView(
-              child: Column(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      WordpressApi.firstTitle,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 35,
-                          fontFamily: "Calibre-Semibold",
-                          letterSpacing: 1),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        CustomIcons.option,
-                        size: 12,
-                        color: Colors.white,
+          body: RefreshIndicator(
+            onRefresh: () {
+              pageNumber = 1;
+              return _loadData();
+            },
+            child: SingleChildScrollView(
+                child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        WordpressApi.firstTitle,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 35,
+                            fontFamily: "Calibre-Semibold",
+                            letterSpacing: 1),
                       ),
-                      onPressed: () {
-                        setState(() {
+                      IconButton(
+                        icon: Icon(
+                          CustomIcons.option,
+                          size: 12,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
                           pageNumber++;
                           _loadData();
-                          setUI();
-                        });
-                      },
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0),
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xFFdd6e6e),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Center(
-                        child: Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 22, vertical: 6),
-                          child: Text(WordpressApi.firstSubtitle1,
-                              style: TextStyle(color: Colors.white)),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    Text(WordpressApi.firstSubtitle2,
-                        style: TextStyle(color: Colors.blueAccent))
-                  ],
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) =>
-                          PostWidget(reversedPosts[currentPage.round()])));
-                },
-                child: Stack(
-                  children: <Widget>[
-                    CardScrollWidget(currentPage, _firstCatPosts),
-                    Positioned.fill(
-                      child: PageView.builder(
-                        itemCount: _firstCatPosts.length,
-                        controller: _controller,
-                        reverse: true,
-                        itemBuilder: (context, index) {
-                          return Container();
+                          setState(() {
+                            setUI();
+                          });
                         },
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(WordpressApi.specialTitle,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 35.0,
-                          fontFamily: "Calibre-Semibold",
-                          letterSpacing: 1.0,
-                        )),
-                    // No function for iconbutton at this moment, so temp hide here
-                    // IconButton(
-                    //   icon: Icon(
-                    //     CustomIcons.option,
-                    //     size: 12.0,
-                    //     color: Colors.white,
-                    //   ),
-                    //   onPressed: () {
-                    //     print("Test 2");
-                    //   },
-                    // )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0),
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.blueAccent,
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Center(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 22.0, vertical: 6.0),
-                          child: Text(WordpressApi.specialSubtitle1,
-                              style: TextStyle(color: Colors.white)),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Color(0xFFdd6e6e),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 22, vertical: 6),
+                            child: Text(WordpressApi.firstSubtitle1,
+                                style: TextStyle(color: Colors.white)),
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 15.0,
-                    ),
-                    Text(WordpressApi.specialSubtitle2,
-                        style: TextStyle(color: Colors.blueAccent))
-                  ],
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Text(WordpressApi.firstSubtitle2,
+                          style: TextStyle(color: Colors.blueAccent))
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: reviewPostWidget,
-              )
-            ],
-          ))),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) =>
+                            PostWidget(reversedPosts[currentPage.round()])));
+                  },
+                  child: Stack(
+                    children: <Widget>[
+                      CardScrollWidget(currentPage, _firstCatPosts),
+                      Positioned.fill(
+                        child: PageView.builder(
+                          itemCount: _firstCatPosts.length,
+                          controller: _controller,
+                          reverse: true,
+                          itemBuilder: (context, index) {
+                            return Container();
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(WordpressApi.specialTitle,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 35.0,
+                            fontFamily: "Calibre-Semibold",
+                            letterSpacing: 1.0,
+                          )),
+                      // No function for iconbutton at this moment, so temp hide here
+                      // IconButton(
+                      //   icon: Icon(
+                      //     CustomIcons.option,
+                      //     size: 12.0,
+                      //     color: Colors.white,
+                      //   ),
+                      //   onPressed: () {
+                      //     print("Test 2");
+                      //   },
+                      // )
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.blueAccent,
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 22.0, vertical: 6.0),
+                            child: Text(WordpressApi.specialSubtitle1,
+                                style: TextStyle(color: Colors.white)),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 15.0,
+                      ),
+                      Text(WordpressApi.specialSubtitle2,
+                          style: TextStyle(color: Colors.blueAccent))
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: reviewPostWidget,
+                )
+              ],
+            )),
+          )),
     );
   }
 
@@ -330,7 +319,8 @@ class _NewsState extends State<News> {
   }
 
   _loadData2() async {
-    String dataURL2 = WordpressApi.specialTitleURL;
+    String dataURL2 =
+        WordpressApi.specialTitleURL.replaceAll('*', WordpressApi.catNumber);
     http.Response response2 = await http.get(dataURL2);
     setState(() {
       final postJSON2 = jsonDecode(response2.body);
@@ -386,13 +376,13 @@ class _NewsState extends State<News> {
   }
 
   _loadData() async {
+    print("Loading Data");
     while (_firstCatPosts.length != 0) {
       _firstCatPosts.removeLast();
     }
     await WordpressApi.loadURL();
     String dataURL =
         WordpressApi.firstTitleUrl.replaceAll('*', pageNumber.toString());
-    print("URL after replace string is: " + dataURL);
     http.Response response = await http.get(dataURL);
     await _loadData2();
     setState(() {

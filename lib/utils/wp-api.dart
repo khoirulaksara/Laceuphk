@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+
+// Load json data from file server at aws 
 class WordpressApi {
   static String appTitle = "";
   static const String jsonURL = "http://18.140.232.162:8080/link.json";
@@ -14,6 +16,7 @@ class WordpressApi {
   static String firstSubtitle2;
 
   static String specialTitle;
+  static String catNumber;
   static String specialTitleURL;
   static String specialSubtitle1;
   static String specialSubtitle2;
@@ -36,6 +39,7 @@ class WordpressApi {
     firstSubtitle2 = linkResult["firstSubtitle2"];
    
     specialTitle = linkResult["specialTitle"];
+    catNumber = linkResult["catNumber"];
     specialTitleURL = baseURL + restApiURL + linkResult["specialTitleURL"];
     specialSubtitle1 = linkResult["specialSubtitle1"];
     specialSubtitle2 = linkResult["specialSubtitle1"];
@@ -52,6 +56,7 @@ class WordpressApi {
     print("firstSubtitle2 is: " + firstSubtitle2);
 
     print("specialTitle is: " + specialTitle);
+    print("The catNumber is: " + catNumber);
     print("specialTitleURL is: " + specialTitleURL);
     print("specialSubtitle1 is: " + specialSubtitle1);
     print("specialSubtitle2 is: " + specialSubtitle2);
