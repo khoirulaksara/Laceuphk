@@ -150,9 +150,6 @@ class _NewsState extends State<News> {
                         onPressed: () {
                           pageNumber++;
                           _loadData();
-                          setState(() {
-                            setUI();
-                          });
                         },
                       )
                     ],
@@ -319,6 +316,7 @@ class _NewsState extends State<News> {
   }
 
   _loadData2() async {
+    print("Loading Data 2");
     String dataURL2 =
         WordpressApi.specialTitleURL.replaceAll('*', WordpressApi.catNumber);
     http.Response response2 = await http.get(dataURL2);
@@ -376,7 +374,7 @@ class _NewsState extends State<News> {
   }
 
   _loadData() async {
-    print("Loading Data");
+    print("Loading Data 1");
     while (_firstCatPosts.length != 0) {
       _firstCatPosts.removeLast();
     }
@@ -394,8 +392,9 @@ class _NewsState extends State<News> {
         _firstCatPosts.add(posts);
         reversedPosts = _firstCatPosts.reversed.toList();
       }
+      setUI();
       _controller = PageController(initialPage: _firstCatPosts.length - 1);
-      currentPage = _firstCatPosts.length - 1.0;
+      currentPage = _firstCatPosts.length - 1;
       _controller.addListener(() {
         setState(() {
           currentPage = _controller.page;
