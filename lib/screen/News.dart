@@ -22,11 +22,13 @@ class _NewsState extends State<News> {
   var _searchResultPosts = <Posts>[];
   var reversedPosts;
   var currentPage;
+
   var pageNumber = 1;
   var searchResultPageNumber = 1;
-  bool _isLoading = false;
-  Container main;
 
+  bool _isLoading = false;
+
+  Container main;
   PageController _controller;
   List<Widget> reviewPostWidget = List();
   List<Widget> resultList = List();
@@ -103,6 +105,7 @@ class _NewsState extends State<News> {
             });
       } else {
         setUI();
+        searchResultPageNumber = 1;
         this._searchIcon = Icon(Icons.search);
         this._appBarTitle = Text(WordpressApi.appTitle);
       }
@@ -153,7 +156,7 @@ class _NewsState extends State<News> {
                           ),
                           onPressed: () {
                             if (_isLoading) {
-                              print("Loading, Dont't click");
+                              print("Loading, Dont't click !");
                             } else {
                               print("Start Load");
                               pageNumber++;
@@ -284,11 +287,16 @@ class _NewsState extends State<News> {
   }
 
   _search(String keyword) async {
-    while (resultList.length != 0) {
+    if (resultList.length != 0) {
       resultList.removeLast();
     }
-    while (_searchResultPosts.length != 0) {
-      _searchResultPosts.removeLast();
+    if (!(searchResultPageNumber > 1)) {
+      while (resultList.length != 0) {
+        resultList.removeLast();
+      }
+      while (_searchResultPosts.length != 0) {
+        _searchResultPosts.removeLast();
+      }
     }
     String searchURL = WordpressApi.searchURL
         .replaceAll('keyword', keyword)
@@ -304,22 +312,36 @@ class _NewsState extends State<News> {
     } else {
       int i = 0;
       for (var resultJSON in resultJSON) {
-        if (resultJSON["media"].toString() != "false") {
+        var post = Posts("", "", -1);
+        if (resultJSON["media"].toString() != "false" &&
+            !(resultJSON["media"].toString().contains("scontent"))) {
           var imgURL = (resultJSON["media"]["colormag-featured-image"])
               .toString()
               .replaceAll('54.254.148.234', 'laceuphk.com');
-          final post = Posts(resultJSON['title'], imgURL, resultJSON["id"]);
-          _searchResultPosts.add(post);
-          resultList.add(SearchResultWidget(_searchResultPosts[i]));
-          i++;
+          print(imgURL);
+          post = Posts(resultJSON['title'], imgURL, resultJSON["id"]);
         } else {
-          final post = Posts(
+          post = Posts(
               resultJSON['title'],
               "https://icon-library.net/images/no-image-available-icon/no-image-available-icon-6.jpg",
               resultJSON["id"]);
-          _searchResultPosts.add(post);
         }
+        _searchResultPosts.add(post);
+        resultList.add(SearchResultWidget(_searchResultPosts[i]));
+        i++;
+        print("The length fo resultList is : ${resultList.length}");
       }
+      resultList.add(RaisedButton(
+        color: Colors.blue,
+        onPressed: () {
+          searchResultPageNumber++;
+          _search(keyword);
+        },
+        child: Text(
+          "More",
+          style: TextStyle(color: Colors.white),
+        ),
+      ));
     }
     setState(() {
       main = Container(
