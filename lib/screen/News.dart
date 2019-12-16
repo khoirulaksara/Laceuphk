@@ -24,7 +24,9 @@ class _NewsState extends State<News> {
   var currentPage;
   var pageNumber = 1;
   var searchResultPageNumber = 1;
+  bool _isLoading = false;
   Container main;
+
   PageController _controller;
   List<Widget> reviewPostWidget = List();
   List<Widget> resultList = List();
@@ -108,6 +110,7 @@ class _NewsState extends State<News> {
   }
 
   setUI() {
+    _isLoading = false;
     main = Container(
       decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -119,152 +122,164 @@ class _NewsState extends State<News> {
               end: Alignment.topCenter,
               tileMode: TileMode.clamp)),
       child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: RefreshIndicator(
-            onRefresh: () {
-              pageNumber = 1;
-              return _loadData();
-            },
-            child: SingleChildScrollView(
-                child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        WordpressApi.firstTitle,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 35,
-                            fontFamily: "Calibre-Semibold",
-                            letterSpacing: 1),
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          CustomIcons.option,
-                          size: 12,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          pageNumber++;
-                          _loadData();
-                        },
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Color(0xFFdd6e6e),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 22, vertical: 6),
-                            child: Text(WordpressApi.firstSubtitle1,
-                                style: TextStyle(color: Colors.white)),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Text(WordpressApi.firstSubtitle2,
-                          style: TextStyle(color: Colors.blueAccent))
-                    ],
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) =>
-                            PostWidget(reversedPosts[currentPage.round()])));
-                  },
-                  child: Stack(
-                    children: <Widget>[
-                      CardScrollWidget(currentPage, _firstCatPosts),
-                      Positioned.fill(
-                        child: PageView.builder(
-                          itemCount: _firstCatPosts.length,
-                          controller: _controller,
-                          reverse: true,
-                          itemBuilder: (context, index) {
-                            return Container();
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(WordpressApi.specialTitle,
+        backgroundColor: Colors.transparent,
+        body: RefreshIndicator(
+          onRefresh: () {
+            pageNumber = 1;
+            return _loadData();
+          },
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverList(
+                delegate: SliverChildListDelegate([
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          WordpressApi.firstTitle,
                           style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 35.0,
-                            fontFamily: "Calibre-Semibold",
-                            letterSpacing: 1.0,
-                          )),
-                      // No function for iconbutton at this moment, so temp hide here
-                      // IconButton(
-                      //   icon: Icon(
-                      //     CustomIcons.option,
-                      //     size: 12.0,
-                      //     color: Colors.white,
-                      //   ),
-                      //   onPressed: () {
-                      //     print("Test 2");
-                      //   },
-                      // )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.blueAccent,
-                          borderRadius: BorderRadius.circular(20.0),
+                              color: Colors.white,
+                              fontSize: 35,
+                              fontFamily: "Calibre-Semibold",
+                              letterSpacing: 1),
                         ),
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 22.0, vertical: 6.0),
-                            child: Text(WordpressApi.specialSubtitle1,
-                                style: TextStyle(color: Colors.white)),
+                        IconButton(
+                          icon: Icon(
+                            CustomIcons.option,
+                            size: 12,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            if (_isLoading) {
+                              print("Loading, Dont't click");
+                            } else {
+                              print("Start Load");
+                              pageNumber++;
+                              _loadData();
+                            }
+                          },
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Color(0xFFdd6e6e),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 22, vertical: 6),
+                              child: Text(WordpressApi.firstSubtitle1,
+                                  style: TextStyle(color: Colors.white)),
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 15.0,
-                      ),
-                      Text(WordpressApi.specialSubtitle2,
-                          style: TextStyle(color: Colors.blueAccent))
-                    ],
+                        SizedBox(
+                          width: 15,
+                        ),
+                        Text(WordpressApi.firstSubtitle2,
+                            style: TextStyle(color: Colors.blueAccent))
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: reviewPostWidget,
-                )
-              ],
-            )),
-          )),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) =>
+                              PostWidget(reversedPosts[currentPage.round()])));
+                    },
+                    child: Stack(
+                      children: <Widget>[
+                        CardScrollWidget(currentPage, _firstCatPosts),
+                        Positioned.fill(
+                          child: PageView.builder(
+                            itemCount: _firstCatPosts.length,
+                            controller: _controller,
+                            reverse: true,
+                            itemBuilder: (context, index) {
+                              return Container();
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(WordpressApi.specialTitle,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 35.0,
+                              fontFamily: "Calibre-Semibold",
+                              letterSpacing: 1.0,
+                            )),
+                        // No function for iconbutton at this moment, so temp hide here
+                        // IconButton(
+                        //   icon: Icon(
+                        //     CustomIcons.option,
+                        //     size: 12.0,
+                        //     color: Colors.white,
+                        //   ),
+                        //   onPressed: () {
+                        //     print("Test 2");
+                        //   },
+                        // )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.blueAccent,
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 22.0, vertical: 6.0),
+                              child: Text(WordpressApi.specialSubtitle1,
+                                  style: TextStyle(color: Colors.white)),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 15.0,
+                        ),
+                        Text(WordpressApi.specialSubtitle2,
+                            style: TextStyle(color: Colors.blueAccent))
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                ]),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.all(8.0),
+                sliver: SliverGrid(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2, childAspectRatio: 1),
+                    delegate: SliverChildListDelegate(reviewPostWidget)),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -316,6 +331,12 @@ class _NewsState extends State<News> {
   }
 
   _loadData2() async {
+    while (_secondCatPosts.length != 0) {
+      _secondCatPosts.removeLast();
+    }
+    while (reviewPostWidget.length != 0) {
+      reviewPostWidget.removeLast();
+    }
     print("Loading Data 2");
     String dataURL2 =
         WordpressApi.specialTitleURL.replaceAll('*', WordpressApi.catNumber);
@@ -336,7 +357,7 @@ class _NewsState extends State<News> {
                   .push(MaterialPageRoute(builder: (_) => PostWidget(posts2)));
             },
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(10.0),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(15.0),
                 child: Container(
@@ -374,6 +395,7 @@ class _NewsState extends State<News> {
   }
 
   _loadData() async {
+    _isLoading = true;
     print("Loading Data 1");
     while (_firstCatPosts.length != 0) {
       _firstCatPosts.removeLast();
