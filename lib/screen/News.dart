@@ -316,6 +316,14 @@ class _NewsState extends State<News> {
   }
 
   _loadData2() async {
+    while (reviewPostWidget.length != 0) {
+      print("Removing");
+      reviewPostWidget.removeLast();
+    }
+    while (_secondCatPosts.length != 0) {
+      print("Removing");
+      _secondCatPosts.removeLast();
+    }
     print("Loading Data 2");
     String dataURL2 =
         WordpressApi.specialTitleURL.replaceAll('*', WordpressApi.catNumber);
