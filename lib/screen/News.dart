@@ -148,6 +148,20 @@ class _NewsState extends State<News> {
                           color: Colors.white,
                         ),
                         onPressed: () {
+                          setState(() {
+                            main = Container(
+                                decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                        colors: [
+                                      Color(0xFF1b1e44),
+                                      Color(0xFF2d3447),
+                                    ],
+                                        begin: Alignment.bottomCenter,
+                                        end: Alignment.topCenter,
+                                        tileMode: TileMode.clamp)),
+                                child:
+                                    Center(child: CircularProgressIndicator()));
+                          });
                           pageNumber++;
                           _loadData();
                         },
