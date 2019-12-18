@@ -7,6 +7,7 @@ import '../utils/wp-api.dart';
 import '../model/Posts.dart';
 import '../widgets/customIcons.dart';
 import '../widgets/searchResultWidget.dart';
+import 'package:loadmore/loadmore.dart';
 
 // To implement the drawer in next version
 import '../widgets/drawerWidget.dart';
@@ -20,6 +21,7 @@ class _NewsState extends State<News> {
   var _firstCatPosts = <Posts>[];
   var _secondCatPosts = <Posts>[];
   var _searchResultPosts = <Posts>[];
+  int get count => _searchResultPosts.length;
   var reversedPosts;
   var currentPage;
 
@@ -287,9 +289,6 @@ class _NewsState extends State<News> {
   }
 
   _search(String keyword) async {
-    if (resultList.length != 0) {
-      resultList.removeLast();
-    }
     if (!(searchResultPageNumber > 1)) {
       while (resultList.length != 0) {
         resultList.removeLast();
@@ -331,23 +330,28 @@ class _NewsState extends State<News> {
         i++;
         print("The length fo resultList is : ${resultList.length}");
       }
-      resultList.add(RaisedButton(
-        color: Colors.blue,
-        onPressed: () {
-          searchResultPageNumber++;
-          _search(keyword);
-        },
-        child: Text(
-          "More",
-          style: TextStyle(color: Colors.white),
-        ),
-      ));
+    }
+    Future<bool> _loadMore() async {
+      print("onLoadMore");
+      await Future.delayed(Duration(seconds: 0, milliseconds: 2000));
+      _loadData();
+      return true;
     }
     setState(() {
       main = Container(
           color: Color(0xFF2d3447),
-          child: ListView(
-            children: resultList,
+          child: LoadMore(
+            isFinish: count >= 60,
+            onLoadMore: _loadMore,
+            child: ListView.builder(
+              itemBuilder: (BuildContext context, int index) {
+                return SearchResultWidget(_searchResultPosts[index]);
+              },
+              itemCount: count,
+            ),
+            whenEmptyLoad: false,
+            delegate: DefaultLoadMoreDelegate(),
+            textBuilder: DefaultLoadMoreTextBuilder.chinese,
           ));
     });
   }

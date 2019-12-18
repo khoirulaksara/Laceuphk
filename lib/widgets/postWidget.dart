@@ -3,8 +3,8 @@ import '../model/Posts.dart';
 import '../utils/wp-api.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:html/dom.dart' as dom;
 import 'package:flutter_html/flutter_html.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PostState extends State<PostWidget> {
   final Posts posts;
@@ -12,7 +12,6 @@ class PostState extends State<PostWidget> {
   Scaffold main;
   PostState(this.posts);
   List<Image> gallery = new List();
-  dom.Node k;
 
   @override
   void initState() {
@@ -46,6 +45,20 @@ class PostState extends State<PostWidget> {
                   ),
                   //Text(textResult, style: TextStyle(color: Colors.white)),
                   Html(
+                    onLinkTap: (url) async {
+                      print(url);
+                      if (await canLaunch(url)) {
+                        await launch(url);
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Could not launch $url'),
+                              );
+                            });
+                      }
+                    },
                     data: nResult,
                     defaultTextStyle: TextStyle(color: Colors.white),
                   ),
