@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_laceuphk/widgets/cardScrollWidget.dart';
 import 'package:flutter_laceuphk/widgets/postWidget.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:convert';
 import '../utils/wp-api.dart';
 import '../model/Posts.dart';
@@ -103,13 +106,19 @@ class _NewsState extends State<News> {
                     color: Color(0xFF2d3447),
                     child: Center(child: CircularProgressIndicator()));
               });
+              searchResultPageNumber = 1;
+              _isLoading = true;
               _search(value);
             });
       } else {
-        setUI();
-        searchResultPageNumber = 1;
-        this._searchIcon = Icon(Icons.search);
-        this._appBarTitle = Text(WordpressApi.appTitle);
+        if (!_isLoading) {
+          _searchResultPosts.clear();
+          print(count);
+          setUI();
+          searchResultPageNumber = 1;
+          this._searchIcon = Icon(Icons.search);
+          this._appBarTitle = Text(WordpressApi.appTitle);
+        }
       }
     });
   }
@@ -289,14 +298,6 @@ class _NewsState extends State<News> {
   }
 
   _search(String keyword) async {
-    if (!(searchResultPageNumber > 1)) {
-      while (resultList.length != 0) {
-        resultList.removeLast();
-      }
-      while (_searchResultPosts.length != 0) {
-        _searchResultPosts.removeLast();
-      }
-    }
     String searchURL = WordpressApi.searchURL
         .replaceAll('keyword', keyword)
         .replaceAll('*', searchResultPageNumber.toString());
@@ -309,39 +310,52 @@ class _NewsState extends State<News> {
         child: Text("No result"),
       ));
     } else {
-      int i = 0;
       for (var resultJSON in resultJSON) {
-        var post = Posts("", "", -1);
         if (resultJSON["media"].toString() != "false" &&
             !(resultJSON["media"].toString().contains("scontent"))) {
           var imgURL = (resultJSON["media"]["colormag-featured-image"])
               .toString()
               .replaceAll('54.254.148.234', 'laceuphk.com');
           print(imgURL);
-          post = Posts(resultJSON['title'], imgURL, resultJSON["id"]);
+
+          try {
+            final response = await http.get(imgURL);
+            if (response.statusCode != 200) {
+              print("Cannot launch!");
+            } else {
+              print("Can launch!");
+              final post = Posts(resultJSON['title'], imgURL, resultJSON["id"]);
+              _searchResultPosts.add(post);
+            }
+          } catch (_) {
+            print("Cannot launch!");
+          }
         } else {
-          post = Posts(
+          final post = Posts(
               resultJSON['title'],
               "https://icon-library.net/images/no-image-available-icon/no-image-available-icon-6.jpg",
               resultJSON["id"]);
+          _searchResultPosts.add(post);
         }
-        _searchResultPosts.add(post);
-        resultList.add(SearchResultWidget(_searchResultPosts[i]));
-        i++;
-        print("The length fo resultList is : ${resultList.length}");
       }
+      searchResultPageNumber++;
+      print(count);
+      _isLoading = false;
     }
+
     Future<bool> _loadMore() async {
       print("onLoadMore");
       await Future.delayed(Duration(seconds: 0, milliseconds: 2000));
-      _loadData();
+      _search(keyword);
+      print(count);
       return true;
     }
+
     setState(() {
       main = Container(
           color: Color(0xFF2d3447),
           child: LoadMore(
-            isFinish: count >= 60,
+            isFinish: false,
             onLoadMore: _loadMore,
             child: ListView.builder(
               itemBuilder: (BuildContext context, int index) {
@@ -351,7 +365,7 @@ class _NewsState extends State<News> {
             ),
             whenEmptyLoad: false,
             delegate: DefaultLoadMoreDelegate(),
-            textBuilder: DefaultLoadMoreTextBuilder.chinese,
+            textBuilder: DefaultLoadMoreTextBuilder.english,
           ));
     });
   }

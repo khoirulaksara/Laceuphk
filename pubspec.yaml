@@ -30,11 +30,6 @@ dependencies:
   url_launcher: ^5.4.1
   loadmore: ^1.0.4
 
-
-
-
-  # https://github.com/jogboms/flutter_spinkit
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
@@ -54,6 +49,7 @@ flutter:
     - lib/assets/images/shoes_01.png
     - lib/assets/images/shoes_02.png
     - lib/assets/images/image_02.jpg
+    - lib/assets/images/no-image-available.jpg
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
