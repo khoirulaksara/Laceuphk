@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'package:auto_size_text/auto_size_text.dart';
 
 var cardAspectRatio = 12.0 / 14.0;
 var widgetAspectRatio = cardAspectRatio * 1.2;
@@ -50,12 +51,14 @@ class CardScrollWidget extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16.0),
                 child: Container(
-                  decoration: BoxDecoration(color: Color(0xFF1b1e44), boxShadow: [
-                    BoxShadow(
-                        color: Colors.black12,
-                        offset: Offset(3.0, 6.0),
-                        blurRadius: 10.0)
-                  ]),
+                  decoration: BoxDecoration(
+                      color: Color(0xFF1b1e44),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black12,
+                            offset: Offset(3.0, 6.0),
+                            blurRadius: 10.0)
+                      ]),
                   child: AspectRatio(
                     aspectRatio: cardAspectRatio,
                     child: Stack(
@@ -80,11 +83,14 @@ class CardScrollWidget extends StatelessWidget {
                                       minHeight: 0,
                                       maxHeight: 100.0,
                                     ),
-                                    child: Text(_posts[postContoll].title,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 15.0,
-                                            fontFamily: "SF-Pro-Text-Regular")),
+                                    child: AutoSizeText(
+                                      _posts[postContoll].title,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15.0,
+                                          fontFamily: "SF-Pro-Text-Regular"),
+                                      maxLines: 2,
+                                    ),
                                   ),
                                 ),
                                 SizedBox(
@@ -101,8 +107,7 @@ class CardScrollWidget extends StatelessWidget {
                                         borderRadius:
                                             BorderRadius.circular(20.0)),
                                     child: Text("Read More",
-                                        style:
-                                            TextStyle(color: Colors.white)),
+                                        style: TextStyle(color: Colors.white)),
                                   ),
                                 )
                               ],
