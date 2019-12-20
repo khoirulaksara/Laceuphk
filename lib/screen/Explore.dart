@@ -21,31 +21,9 @@ class _ExploreState extends State<Explore> {
   int pageNumber = 1;
   Container main;
 
-  List<StaggeredTile> _staggeredTiles = <StaggeredTile>[
-    StaggeredTile.count(1, 2),
-    StaggeredTile.count(1, 1),
-    StaggeredTile.count(1, 1),
-    StaggeredTile.count(1, 1),
-    StaggeredTile.count(1, 1),
-    StaggeredTile.count(1, 1),
-    StaggeredTile.count(2, 2),
-    StaggeredTile.count(1, 1),
-    StaggeredTile.count(1, 1),
-    StaggeredTile.count(1, 1),
-  ];
+  List<StaggeredTile> _staggeredTiles = <StaggeredTile>[];
 
-  List<Widget> _tiles = <Widget>[
-    _VideoTile(),
-    _ImageTile(),
-    _ImageTile(),
-    _ImageTile(),
-    _ImageTile(),
-    _ImageTile(),
-    _VideoTile(),
-    _ImageTile(),
-    _ImageTile(),
-    _ImageTile(),
-  ];
+  List<Widget> _tiles = <Widget>[];
 
   @override
   void initState() {
@@ -67,15 +45,16 @@ class _ExploreState extends State<Explore> {
   Future<bool> _loadMore() async {
     print("onLoadMore");
     await Future.delayed(Duration(seconds: 0, milliseconds: 2000));
-    _loadData();
+    //_loadData();
     return true;
   }
 
   _loadData() async {
     print("Loading Data 1");
-    while (count != 0) {
-      imageList.removeLast();
-    }
+    imageList.clear();
+    _staggeredTiles.clear();
+    _tiles.clear();
+
     await WordpressApi.loadURL();
     String dataURL =
         WordpressApi.firstTitleUrl.replaceAll('*', pageNumber.toString());
@@ -83,6 +62,31 @@ class _ExploreState extends State<Explore> {
     final postJSON = jsonDecode(response.body);
     for (var postJSON in postJSON) {
       imageList.add(postJSON["media"]["colormag-featured-image"]);
+      print(postJSON["media"]["colormag-featured-image"]);
+      Image(image: NetworkImage(postJSON["media"]["colormag-featured-image"]))
+          .image
+          .resolve(ImageConfiguration())
+          .addListener(ImageStreamListener((ImageInfo imageInfo, bool _) {
+            int width = imageInfo.image.width;
+            int height = imageInfo.image.height;
+                 print("The width of the image is: ${width} and the height is: ${height} ");
+                 print(width/height);
+                 if (width / height > 1.3) {
+                   // horizontal
+                   _staggeredTiles.add(StaggeredTile.count(2, 1));
+                   print("horizontal");
+                 } else if (width / height < 0.5) {
+                   // vertical
+                   _staggeredTiles.add(StaggeredTile.count(1, 2));
+                   print("vertical");
+                 } 
+                 else {
+                   // 1:1
+                   _staggeredTiles.add(StaggeredTile.count(1, 1));
+                   print("1 to 1");
+                 }  
+          }));
+          _tiles.add(_ImageTile());
     }
     setUI();
   }
@@ -100,20 +104,12 @@ class _ExploreState extends State<Explore> {
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
                 tileMode: TileMode.clamp)),
-        child: LoadMore(
-          isFinish: count >= 5,
-          onLoadMore: _loadMore,
-          child: StaggeredGridView.count(
-            crossAxisCount: 3,
-            staggeredTiles: _staggeredTiles,
-            children: _tiles,
-            mainAxisSpacing: 0,
-            crossAxisSpacing: 0,
-            //padding: const EdgeInsets.all(0.0),
-          ),
-          whenEmptyLoad: false,
-          delegate: DefaultLoadMoreDelegate(),
-          textBuilder: DefaultLoadMoreTextBuilder.chinese,
+        child: StaggeredGridView.count(
+          crossAxisCount: 3,
+          staggeredTiles: _staggeredTiles,
+          children: _tiles,
+          mainAxisSpacing: 0,
+          crossAxisSpacing: 0,
         ),
       );
     });
@@ -134,7 +130,7 @@ class _ExploreState extends State<Explore> {
 
 class _VideoTile extends StatelessWidget {
   final _controller = YoutubePlayerController(
-    initialVideoId: 'L0MK7qz13bU',
+    initialVideoId: 'ohBQ59OXnYM',
     flags: YoutubePlayerFlags(
       mute: false,
       autoPlay: false,
@@ -151,7 +147,7 @@ class _VideoTile extends StatelessWidget {
           child: YoutubePlayer(
             controller: _controller,
             showVideoProgressIndicator: false,
-            progressIndicatorColor: Colors.amber,
+            progressIndicatorColor: Colors.red,
             onReady: () {
               print('Player is ready.');
             },
@@ -161,14 +157,13 @@ class _VideoTile extends StatelessWidget {
 }
 
 class _ImageTile extends StatelessWidget {
-  final ranNum = Random();
 
   @override
   Widget build(BuildContext context) {
     return Card(
       color: Colors.transparent,
       child: InkWell(
-          onTap: () {}, child: Image.network(imageList[ranNum.nextInt(count)])),
+          onTap: () {}, child: Image.network(imageList[0])),
     );
   }
 }
