@@ -1,10 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_laceuphk/widgets/cardScrollWidget.dart';
 import 'package:flutter_laceuphk/widgets/postWidget.dart';
 import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher.dart';
 import 'dart:convert';
 import '../utils/wp-api.dart';
 import '../model/Post.dart';
@@ -32,6 +29,7 @@ class _NewsState extends State<News> {
   var searchResultPageNumber = 1;
 
   bool _isLoading = false;
+  bool _didBuild = false;
 
   Container main;
   PageController _controller;
@@ -124,6 +122,7 @@ class _NewsState extends State<News> {
   }
 
   setUI() {
+    _didBuild = false;
     _isLoading = false;
     main = Container(
       decoration: BoxDecoration(
@@ -139,6 +138,8 @@ class _NewsState extends State<News> {
         backgroundColor: Colors.transparent,
         body: RefreshIndicator(
           onRefresh: () {
+            currentPage = 4;
+            _didBuild = false;
             pageNumber = 1;
             return _loadData();
           },
@@ -219,6 +220,7 @@ class _NewsState extends State<News> {
                             controller: _controller,
                             reverse: true,
                             itemBuilder: (context, index) {
+                              _didBuild = true;
                               return Container();
                             },
                           ),
@@ -435,6 +437,9 @@ class _NewsState extends State<News> {
   }
 
   _loadData() async {
+    if (_controller != null) {
+      _controller.dispose();
+    }
     _isLoading = true;
     print("Loading Data 1");
     while (_firstCatPosts.length != 0) {
@@ -455,12 +460,16 @@ class _NewsState extends State<News> {
         reversedPosts = _firstCatPosts.reversed.toList();
       }
       setUI();
-      _controller = PageController(initialPage: _firstCatPosts.length - 1);
+      _controller = PageController(initialPage: 4);
       currentPage = _firstCatPosts.length - 1;
       _controller.addListener(() {
         setState(() {
-          currentPage = _controller.page;
-          setUI();
+          if (_didBuild) {
+            currentPage = _controller.page;
+            print("controller page number b4 setState is: ${_controller.page}");
+            print("Current page number is: ${currentPage}");
+            setUI();
+          }
         });
       });
     });

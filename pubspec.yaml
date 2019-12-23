@@ -19,8 +19,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_screenutil:
-  http:
+  flutter_screenutil: ^0.7.0
+  http: ^0.12.0+2
   flutter_html: ^0.11.1
   flutter_staggered_grid_view: ^0.3.0
   youtube_player_flutter: 
