@@ -3,7 +3,10 @@ import './screen/News.dart';
 //import './screen/Store.dart';
 import './screen/Explore.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  final myBloc = Bloc()
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   @override

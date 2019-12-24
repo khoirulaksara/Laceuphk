@@ -3,8 +3,9 @@ import 'package:flutter_laceuphk/widgets/cardScrollWidget.dart';
 import 'package:flutter_laceuphk/widgets/postWidget.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../utils/wp-api.dart';
-import '../model/Post.dart';
+import 'package:flutter_laceuphk/model/bloc.dart';
+import 'package:flutter_laceuphk/utils/wp-api.dart';
+import 'package:flutter_laceuphk/model/post.dart';
 import '../widgets/customIcons.dart';
 import '../widgets/searchResultWidget.dart';
 import 'package:loadmore/loadmore.dart';
@@ -18,6 +19,9 @@ class News extends StatefulWidget {
 }
 
 class _NewsState extends State<News> {
+
+  final myBloc = Bloc();
+
   var _firstCatPosts = <Post>[];
   var _secondCatPosts = <Post>[];
   var _searchResultPosts = <Post>[];
@@ -45,18 +49,7 @@ class _NewsState extends State<News> {
   @override
   void initState() {
     super.initState();
-    main = Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                colors: [
-              Color(0xFF1b1e44),
-              Color(0xFF2d3447),
-            ],
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                tileMode: TileMode.clamp)),
-        child: Center(child: CircularProgressIndicator()));
-    _loadData();
+    print(myBloc.posts);
   }
 
   @override
@@ -80,7 +73,186 @@ class _NewsState extends State<News> {
           )
         ],
       ),
-      body: main,
+      body: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                colors: [
+              Color(0xFF1b1e44),
+              Color(0xFF2d3447),
+            ],
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                tileMode: TileMode.clamp)),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: RefreshIndicator(
+            onRefresh: () {
+              currentPage = 4;
+              _didBuild = false;
+              pageNumber = 1;
+              return _loadData();
+            },
+            child: CustomScrollView(
+              slivers: <Widget>[
+                SliverList(
+                  delegate: SliverChildListDelegate([
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            WordpressApi.firstTitle,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 35,
+                                fontFamily: "Calibre-Semibold",
+                                letterSpacing: 1),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              CustomIcons.option,
+                              size: 12,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              if (_isLoading) {
+                                print("Loading, Dont't click !");
+                              } else {
+                                print("Start Load");
+                                pageNumber++;
+                                _loadData();
+                              }
+                            },
+                          )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Color(0xFFdd6e6e),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Center(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 22, vertical: 6),
+                                child: Text(WordpressApi.firstSubtitle1,
+                                    style: TextStyle(color: Colors.white)),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Text(WordpressApi.firstSubtitle2,
+                              style: TextStyle(color: Colors.blueAccent))
+                        ],
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => PostWidget(
+                                reversedPosts[currentPage.round()])));
+                      },
+                      child: Stack(
+                        children: <Widget>[
+                          StreamBuilder<List<Post>>(
+                            stream: myBloc.posts,
+                            initialData: [],
+                            builder: (context, snapshot) =>
+                                CardScrollWidget(currentPage, snapshot.data),
+                          ),
+                          CardScrollWidget(currentPage, myBloc),
+                          Positioned.fill(
+                            child: PageView.builder(
+                              itemCount: _firstCatPosts.length,
+                              controller: _controller,
+                              reverse: true,
+                              itemBuilder: (context, index) {
+                                _didBuild = true;
+                                return Container();
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(WordpressApi.specialTitle,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 35.0,
+                                fontFamily: "Calibre-Semibold",
+                                letterSpacing: 1.0,
+                              )),
+
+                          /// No function for iconbutton at this moment, so temp hide here
+                          // IconButton(
+                          //   icon: Icon(
+                          //     CustomIcons.option,
+                          //     size: 12.0,
+                          //     color: Colors.white,
+                          //   ),
+                          //   onPressed: () {
+                          //     print("Test 2");
+                          //   },
+                          // )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.blueAccent,
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            child: Center(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 22.0, vertical: 6.0),
+                                child: Text(WordpressApi.specialSubtitle1,
+                                    style: TextStyle(color: Colors.white)),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 15.0,
+                          ),
+                          Text(WordpressApi.specialSubtitle2,
+                              style: TextStyle(color: Colors.blueAccent))
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                  ]),
+                ),
+                SliverPadding(
+                  padding: const EdgeInsets.all(8.0),
+                  sliver: SliverGrid(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2, childAspectRatio: 1),
+                      delegate: SliverChildListDelegate(reviewPostWidget)),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
       //drawer: DrawerWidget(),
     );
   }
@@ -213,7 +385,7 @@ class _NewsState extends State<News> {
                     },
                     child: Stack(
                       children: <Widget>[
-                        CardScrollWidget(currentPage, _firstCatPosts),
+                        CardScrollWidget(currentPage, myBloc),
                         Positioned.fill(
                           child: PageView.builder(
                             itemCount: _firstCatPosts.length,
@@ -240,7 +412,8 @@ class _NewsState extends State<News> {
                               fontFamily: "Calibre-Semibold",
                               letterSpacing: 1.0,
                             )),
-                        // No function for iconbutton at this moment, so temp hide here
+
+                        /// No function for iconbutton at this moment, so temp hide here
                         // IconButton(
                         //   icon: Icon(
                         //     CustomIcons.option,
@@ -326,18 +499,14 @@ class _NewsState extends State<News> {
               print("Cannot launch!");
             } else {
               print("Can launch!");
-              final post = Post(resultJSON['title'], imgURL, resultJSON["id"]);
-              _searchResultPosts.add(post);
+              //final post = Post(resultJSON['title'], imgURL, resultJSON["id"]);
+              //_searchResultPosts.add(post);
             }
           } catch (_) {
             print("Cannot launch!");
           }
         } else {
-          final post = Post(
-              resultJSON['title'],
-              "https://icon-library.net/images/no-image-available-icon/no-image-available-icon-6.jpg",
-              resultJSON["id"]);
-          _searchResultPosts.add(post);
+          //final post = Post(resultJSON['title'],"https://icon-library.net/images/no-image-available-icon/no-image-available-icon-6.jpg",resultJSON["id"]);_searchResultPosts.add(post);
         }
       }
       searchResultPageNumber++;
@@ -361,7 +530,7 @@ class _NewsState extends State<News> {
             onLoadMore: _loadMore,
             child: ListView.builder(
               itemBuilder: (BuildContext context, int index) {
-                return SearchResultWidget(_searchResultPosts[index]);
+                //return SearchResultWidget(_searchResultPosts[index]);
               },
               itemCount: count,
             ),
@@ -390,13 +559,13 @@ class _NewsState extends State<News> {
           var imgURL = (postJSON2["media"]["colormag-featured-image"])
               .toString()
               .replaceAll('54.254.148.234', 'laceuphk.com');
-          final posts2 = Post(postJSON2['title'], imgURL, postJSON2["id"]);
-          _secondCatPosts.add(posts2);
+          //final posts2 = Post(postJSON2['title'], imgURL, postJSON2["id"]);
+          //_secondCatPosts.add(posts2);
 
           reviewPostWidget.add(GestureDetector(
             onTap: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => PostWidget(posts2)));
+              //Navigator.of(context)
+              //.push(MaterialPageRoute(builder: (_) => PostWidget(posts2)));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -426,11 +595,11 @@ class _NewsState extends State<News> {
             ),
           ));
         } else {
-          final posts2 = Post(
-              postJSON2['title'],
-              "https://icon-library.net/images/no-image-available-icon/no-image-available-icon-6.jpg",
-              postJSON2["id"]);
-          _secondCatPosts.add(posts2);
+          //final posts2 = Post(
+          //     postJSON2['title'],
+          //     "https://icon-library.net/images/no-image-available-icon/no-image-available-icon-6.jpg",
+          //     postJSON2["id"]);
+          // _secondCatPosts.add(posts2);
         }
       }
     });
@@ -454,10 +623,10 @@ class _NewsState extends State<News> {
       this._appBarTitle = Text(WordpressApi.appTitle);
       final postJSON = jsonDecode(response.body);
       for (var postJSON in postJSON) {
-        final posts = Post(postJSON['title'],
-            postJSON["media"]["colormag-featured-image"], postJSON["id"]);
-        _firstCatPosts.add(posts);
-        reversedPosts = _firstCatPosts.reversed.toList();
+        // final posts = Post(postJSON['title'],
+        //     postJSON["media"]["colormag-featured-image"], postJSON["id"]);
+        // _firstCatPosts.add(posts);
+        // reversedPosts = _firstCatPosts.reversed.toList();
       }
       setUI();
       _controller = PageController(initialPage: 4);
