@@ -1,11 +1,29 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+// Load json data from file server at aws
+/* The default json data format as shown below
+{
+"appTitle": "This is the testing version ",
+"baseURL": "http://laceuphk.com",
+"restApiURL": "/wp-json/better-rest-endpoints/v1/",
+"firstTitle": "test",
+"firstTitleUrl": "posts?page=*&per_page=5&content=false",
+"firstSubtitle1": "test",
+"firstSubtitle2": "test",
+"specialTitle": "test",
+"catNumber": "214",
+"specialTitleURL": "posts?category=*&content=false",
+"specialSubtitle1": "test",
+"specialSubtitle2": "test",
+"contentURL": "post/",
+"searchURL": "search?search=keyword&content=false&page=*&per_page=5"
+}
+*/ 
 
-// Load json data from file server at aws 
 class WordpressApi {
   static String appTitle = "";
-  static const String jsonURL = "http://18.140.232.162:8080/link.json";
+  static const String jsonURL = "https://file.shunnokw.com/link.json";
 
   static String baseURL;
   static String restApiURL;
