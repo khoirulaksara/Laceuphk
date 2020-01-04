@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import './screen/News.dart';
-//import './screen/Store.dart';
+import './screen/Store.dart';
 import './screen/Explore.dart';
 
 void main() => runApp(MyApp());
