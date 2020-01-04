@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:convert';
 import '../utils/wp-api.dart';
-import '../model/Post.dart';
+import '../model/Posts.dart';
 import '../widgets/customIcons.dart';
 import '../widgets/searchResultWidget.dart';
 import 'package:loadmore/loadmore.dart';
@@ -21,9 +21,9 @@ class News extends StatefulWidget {
 }
 
 class _NewsState extends State<News> {
-  var _firstCatPosts = <Post>[];
-  var _secondCatPosts = <Post>[];
-  var _searchResultPosts = <Post>[];
+  var _firstCatPosts = <Posts>[];
+  var _secondCatPosts = <Posts>[];
+  var _searchResultPosts = <Posts>[];
   int get count => _searchResultPosts.length;
   var reversedPosts;
   var currentPage;
@@ -324,14 +324,14 @@ class _NewsState extends State<News> {
               print("Cannot launch!");
             } else {
               print("Can launch!");
-              final post = Post(resultJSON['title'], imgURL, resultJSON["id"]);
+              final post = Posts(resultJSON['title'], imgURL, resultJSON["id"]);
               _searchResultPosts.add(post);
             }
           } catch (_) {
             print("Cannot launch!");
           }
         } else {
-          final post = Post(
+          final post = Posts(
               resultJSON['title'],
               "https://icon-library.net/images/no-image-available-icon/no-image-available-icon-6.jpg",
               resultJSON["id"]);
@@ -388,7 +388,7 @@ class _NewsState extends State<News> {
           var imgURL = (postJSON2["media"]["colormag-featured-image"])
               .toString()
               .replaceAll('54.254.148.234', 'laceuphk.com');
-          final posts2 = Post(postJSON2['title'], imgURL, postJSON2["id"]);
+          final posts2 = Posts(postJSON2['title'], imgURL, postJSON2["id"]);
           _secondCatPosts.add(posts2);
 
           reviewPostWidget.add(GestureDetector(
@@ -424,7 +424,7 @@ class _NewsState extends State<News> {
             ),
           ));
         } else {
-          final posts2 = Post(
+          final posts2 = Posts(
               postJSON2['title'],
               "https://icon-library.net/images/no-image-available-icon/no-image-available-icon-6.jpg",
               postJSON2["id"]);
@@ -449,7 +449,7 @@ class _NewsState extends State<News> {
       this._appBarTitle = Text(WordpressApi.appTitle);
       final postJSON = jsonDecode(response.body);
       for (var postJSON in postJSON) {
-        final posts = Post(postJSON['title'],
+        final posts = Posts(postJSON['title'],
             postJSON["media"]["colormag-featured-image"], postJSON["id"]);
         _firstCatPosts.add(posts);
         reversedPosts = _firstCatPosts.reversed.toList();

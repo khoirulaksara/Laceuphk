@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../model/Post.dart';
+import '../model/Posts.dart';
 import '../widgets/postWidget.dart';
 
 class SearchResultWidget extends StatelessWidget {
-  final Post post;
+  final Posts post;
 
   SearchResultWidget(this.post);
 

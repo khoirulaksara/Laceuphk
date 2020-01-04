@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../model/Post.dart';
+import '../model/Posts.dart';
 import '../utils/wp-api.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -7,7 +7,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PostState extends State<PostWidget> {
-  final Post posts;
+  final Posts posts;
   String nResult;
   Scaffold main;
   PostState(this.posts);
@@ -84,7 +84,7 @@ class PostState extends State<PostWidget> {
 }
 
 class PostWidget extends StatefulWidget {
-  final Post posts;
+  final Posts posts;
 
   PostWidget(this.posts) {
     if (posts == null) {

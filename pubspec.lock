@@ -22,13 +22,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.4.0"
-  auto_size_text:
-    dependency: "direct main"
-    description:
-      name: auto_size_text
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -198,13 +191,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
-  rxdart:
-    dependency: "direct main"
-    description:
-      name: rxdart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.23.1"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -297,11 +283,9 @@ packages:
   webview_flutter:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: d48cdc8c522ce36abc8b64d2f5533d12f0a8d1db
-      url: "https://github.com/shunnokw/webview_flutter.git"
-    source: git
+      path: webview_flutter
+      relative: true
+    source: path
     version: "0.3.18+1"
   xml:
     dependency: transitive
@@ -313,12 +297,10 @@ packages:
   youtube_player_flutter:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: aa59d7bf3c10386e0161bd870882bd62eb5bd2eb
-      url: "https://github.com/shunnokw/youtube_player_flutter.git"
-    source: git
+      path: youtube_player_flutter
+      relative: true
+    source: path
     version: "6.0.3+2"
 sdks:
-  dart: ">=2.6.0 <3.0.0"
+  dart: ">=2.5.0 <3.0.0"
   flutter: ">=1.12.8 <2.0.0"
