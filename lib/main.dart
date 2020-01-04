@@ -2,10 +2,25 @@ import 'package:flutter/material.dart';
 import './screen/News.dart';
 //import './screen/Store.dart';
 import './screen/Explore.dart';
+import './model/bloc.dart';
 
 void main() {
-  final myBloc = Bloc()
-  runApp(MyApp());
+  runApp(InheritedBloc(child:MyApp()));
+}
+
+class InheritedBloc extends InheritedWidget {
+  final Widget child;
+  final mybloc = Bloc();
+
+  InheritedBloc({ this.child}): super(child: child);
+
+  get myBloc => mybloc;
+
+  @override
+  bool updateShouldNotify(InheritedBloc oldwidget) => true;
+
+  static InheritedBloc of(BuildContext context) =>
+    context.dependOnInheritedWidgetOfExactType();
 }
 
 class MyApp extends StatefulWidget {
@@ -37,7 +52,11 @@ class MyAppState extends State<MyApp> {
         primaryColor: Color(0xFF2d3447),
       ),
       home: Scaffold(
-          backgroundColor: Color(0xFF1b1e44),
+        appBar: AppBar(
+          title: Text("LaceupHK"),
+          elevation: 0,
+        ),
+          //backgroundColor: Color(0xFF1b1e44),
           body: _pageOptions[_selectedPage],
           bottomNavigationBar: SafeArea(
             child: Container(
