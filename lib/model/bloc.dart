@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_laceuphk/model/post.dart';
 import 'package:rxdart/rxdart.dart';
+import 'dart:collection';
 import 'package:http/http.dart' as http;
 import '../utils/wp-api.dart';
 
@@ -9,14 +10,6 @@ class Bloc {
   final _postsSubject = BehaviorSubject<List<Post>>();
 
   var _posts = <Post>[];
-
-  List<int> _ids = [
-    11088,
-    11181,
-    11175,
-    11160,
-    11151,  
-  ];
 
   Bloc() {
     _updatePosts().then((_) {
@@ -26,9 +19,9 @@ class Bloc {
 
   Stream<List<Post>> get posts => _postsSubject.stream;
 
-  Future<Post> _getPost(int id) async {
-    
-    final postURL = WordpressApi.contentURL + id.toString();
+  Future<Post> _getPostbyPage(int pageNumber) async {
+    final postURL =
+        WordpressApi.firstTitleUrl.replaceAll('*', pageNumber.toString());
     final postResponse = await http.get(postURL);
     if (postResponse.statusCode == 200) {
       return Post.fromJson(jsonDecode(postResponse.body));
@@ -36,9 +29,8 @@ class Bloc {
   }
 
   Future<Null> _updatePosts() async {
-    await WordpressApi.loadURL();
-    final futurePosts = _ids.map((id) => _getPost(id));
+    final futurePosts = _getPostbyPage(1);
     final posts = await Future.wait(futurePosts);
-    _posts = posts;
+    return posts;
   }
 }
