@@ -12,6 +12,7 @@ class Bloc {
   final _postsSubject = BehaviorSubject<UnmodifiableListView<Post>>();
 
   var _posts = <Post>[];
+  var pageNumber = 1;
 
   List<int> _ids = [
     9922,

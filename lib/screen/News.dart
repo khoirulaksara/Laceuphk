@@ -63,7 +63,7 @@ class _NewsState extends State<News> {
                   Text("Trending",
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 46.0,
+                        fontSize: 35.0,
                         fontFamily: "Calibre-Semibold",
                         letterSpacing: 1.0,
                       )),
@@ -140,7 +140,7 @@ class _NewsState extends State<News> {
                   Text("Favourite",
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 46.0,
+                        fontSize: 35.0,
                         fontFamily: "Calibre-Semibold",
                         letterSpacing: 1.0,
                       )),
@@ -183,6 +183,9 @@ class _NewsState extends State<News> {
             SizedBox(
               height: 20.0,
             ),
+            Container(
+              height: 100,
+            )
           ],
         ),
       ),
