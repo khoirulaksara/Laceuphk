@@ -117,12 +117,8 @@ class _ExploreState extends State<Explore> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Gallery"),
-        elevation: 0.0,
-      ),
-      body: main,
+    return Container(
+      child: main,
       //drawer: DrawerWidget(),
     );
   }

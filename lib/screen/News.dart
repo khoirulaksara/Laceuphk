@@ -111,19 +111,26 @@ class _NewsState extends State<News> {
                   if (!snapshot.hasData) {
                     return CircularProgressIndicator();
                   }
-                  return Stack(children: <Widget>[
-                    CardScrollWidget(currentPage, snapshot.data),
-                    Positioned.fill(
-                      child: PageView.builder(
-                        itemCount: images.length,
-                        controller: controller,
-                        reverse: true,
-                        itemBuilder: (context, index) {
-                          return Container();
-                        },
-                      ),
-                    )
-                  ]);
+                  return GestureDetector(
+                    onTap: () {
+                      // Navigator.of(context).push(MaterialPageRoute(
+                      //     builder: (_) =>
+                      //         PostWidget(reversedPosts[currentPage.round()])));
+                    },
+                    child: Stack(children: <Widget>[
+                      CardScrollWidget(currentPage, snapshot.data),
+                      Positioned.fill(
+                        child: PageView.builder(
+                          itemCount: images.length,
+                          controller: controller,
+                          reverse: true,
+                          itemBuilder: (context, index) {
+                            return Container();
+                          },
+                        ),
+                      )
+                    ]),
+                  );
                 }),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -176,16 +183,6 @@ class _NewsState extends State<News> {
             SizedBox(
               height: 20.0,
             ),
-            Row(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(left: 18.0),
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20.0),
-                      child: Container()),
-                )
-              ],
-            )
           ],
         ),
       ),
