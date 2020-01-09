@@ -15,15 +15,33 @@ import '../model/bloc.dart';
 // To implement the drawer in next version
 import '../widgets/drawerWidget.dart';
 
+List<String> images = [
+  "assets/image_05.png",
+  "assets/image_04.jpg",
+  "assets/image_03.jpg",
+  "assets/image_02.jpg",
+  "assets/image_01.png",
+];
+
 class News extends StatefulWidget {
   @override
   _NewsState createState() => _NewsState();
 }
 
 class _NewsState extends State<News> {
+  var currentPage = images.length - 1.0;
+
   @override
   Widget build(BuildContext context) {
     Bloc myStream = InheritedBloc.of(context).mybloc;
+
+    PageController controller = PageController(initialPage: images.length - 1);
+    controller.addListener(() {
+      setState(() {
+        currentPage = controller.page;
+      });
+    });
+
     return Container(
       decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -34,25 +52,143 @@ class _NewsState extends State<News> {
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
               tileMode: TileMode.clamp)),
-      child: Stack(
-        children: <Widget>[
-          StreamBuilder<UnmodifiableListView<Post>>(
-              stream: myStream.posts,
-              initialData: UnmodifiableListView<Post>([]),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (!snapshot.hasData) {
-                  return Text("Loading...");
-                }
-                return ListView(
-                  children: snapshot.data.map<Widget>(_buildItem).toList(),
-                );
-              }),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text("Trending",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 46.0,
+                        fontFamily: "Calibre-Semibold",
+                        letterSpacing: 1.0,
+                      )),
+                  IconButton(
+                    icon: Icon(
+                      CustomIcons.option,
+                      size: 12.0,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {},
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xFFff6e6e),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 22.0, vertical: 6.0),
+                        child: Text("Animated",
+                            style: TextStyle(color: Colors.white)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 15.0,
+                  ),
+                  Text("25+ Stories",
+                      style: TextStyle(color: Colors.blueAccent))
+                ],
+              ),
+            ),
+            StreamBuilder<UnmodifiableListView<Post>>(
+                stream: myStream.posts,
+                initialData: UnmodifiableListView<Post>([]),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (!snapshot.hasData) {
+                    return CircularProgressIndicator();
+                  }
+                  return Stack(children: <Widget>[
+                    CardScrollWidget(currentPage, snapshot.data),
+                    Positioned.fill(
+                      child: PageView.builder(
+                        itemCount: images.length,
+                        controller: controller,
+                        reverse: true,
+                        itemBuilder: (context, index) {
+                          return Container();
+                        },
+                      ),
+                    )
+                  ]);
+                }),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text("Favourite",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 46.0,
+                        fontFamily: "Calibre-Semibold",
+                        letterSpacing: 1.0,
+                      )),
+                  IconButton(
+                    icon: Icon(
+                      CustomIcons.option,
+                      size: 12.0,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {},
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.blueAccent,
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 22.0, vertical: 6.0),
+                        child: Text("Latest",
+                            style: TextStyle(color: Colors.white)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 15.0,
+                  ),
+                  Text("9+ Stories", style: TextStyle(color: Colors.blueAccent))
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 20.0,
+            ),
+            Row(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(left: 18.0),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20.0),
+                      child: Container()),
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
-  }
-
-  Widget _buildItem(Post post) {
-    return Text(post.title);
   }
 }

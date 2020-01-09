@@ -35,6 +35,7 @@ class Bloc {
     if (postResponse.statusCode == 200) {
       return Post.fromJson(jsonDecode(postResponse.body));
     }
+    throw ApiError("Article $id couldn't be fetched.");
   }
 
   Future<Null> _updatePosts() async {
@@ -43,4 +44,9 @@ class Bloc {
     final posts = await Future.wait(futurePosts);
     _posts = posts;
   }
+}
+
+class ApiError extends Error {
+  final String errorMessage;
+  ApiError(this.errorMessage);
 }
