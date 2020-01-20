@@ -5,14 +5,14 @@ import './screen/Explore.dart';
 import './model/bloc.dart';
 
 void main() {
-  runApp(InheritedBloc(child:MyApp()));
+  runApp(InheritedBloc(child: MyApp()));
 }
 
 class InheritedBloc extends InheritedWidget {
   final Widget child;
   final mybloc = Bloc();
 
-  InheritedBloc({ this.child}): super(child: child);
+  InheritedBloc({this.child}) : super(child: child);
 
   get myBloc => mybloc;
 
@@ -20,7 +20,7 @@ class InheritedBloc extends InheritedWidget {
   bool updateShouldNotify(InheritedBloc oldwidget) => true;
 
   static InheritedBloc of(BuildContext context) =>
-    context.dependOnInheritedWidgetOfExactType();
+      context.dependOnInheritedWidgetOfExactType();
 }
 
 class MyApp extends StatefulWidget {
@@ -39,9 +39,17 @@ class MyAppState extends State<MyApp> {
   ];
 
   List<Widget> bottomNavIconList = [
-    Icon(Icons.home, size: 30, color: Colors.white,),
+    Icon(
+      Icons.home,
+      size: 30,
+      color: Colors.white,
+    ),
     //Icon(Icons.store, size: 35),
-    Icon(Icons.explore, size: 30, color: Colors.white,),
+    Icon(
+      Icons.explore,
+      size: 30,
+      color: Colors.white,
+    ),
   ];
 
   @override
@@ -52,39 +60,52 @@ class MyAppState extends State<MyApp> {
         primaryColor: Color(0xFF2d3447),
       ),
       home: Scaffold(
-        appBar: AppBar(
-          title: Text("LaceupHK"),
-          elevation: 0,
-        ),
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(40.0),
+            child: AppBar(
+              title: Text("LaceupHK"),
+              elevation: 0,
+              actions: <Widget>[
+                IconButton(
+                  onPressed: () {
+                    
+                  },
+                  icon: Icon(Icons.search),
+                )
+              ],
+            ),
+          ),
           //backgroundColor: Color(0xFF1b1e44),
           body: _pageOptions[_selectedPage],
-          bottomNavigationBar: SafeArea(
-            child: Container(
-              height: 50,
-              decoration: BoxDecoration(color: Color(0xFF1b1e44), boxShadow: [
-                BoxShadow(
-                    color: Colors.black12.withOpacity(0.065),
-                    offset: Offset(0, -3),
-                    blurRadius: 10)
-              ]),
-              child: Row(
-                children: bottomNavIconList.map((item) {
-                  var index = bottomNavIconList.indexOf(item);
-                  return Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedPage = index;
-                        });
-                      },
-                      child: bottomNavItem(item, index == _selectedPage),
-                    ),
-                  );
-                }).toList(),
+          bottomNavigationBar: Container(
+            color: Color(0xFF1b1e44),
+            child: SafeArea(
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(color: Color(0xFF1b1e44), boxShadow: [
+                  BoxShadow(
+                      color: Colors.black12.withOpacity(0.065),
+                      offset: Offset(0, -3),
+                      blurRadius: 10)
+                ]),
+                child: Row(
+                  children: bottomNavIconList.map((item) {
+                    var index = bottomNavIconList.indexOf(item);
+                    return Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedPage = index;
+                          });
+                        },
+                        child: bottomNavItem(item, index == _selectedPage),
+                      ),
+                    );
+                  }).toList(),
+                ),
               ),
             ),
-          )
-          ),
+          )),
     );
   }
 }

@@ -1,27 +1,19 @@
 import 'dart:collection';
-
 import 'package:flutter/material.dart';
+import 'package:loadmore/loadmore.dart';
+
 import '../main.dart';
 import '../widgets/cardScrollWidget.dart';
 import '../widgets/postWidget.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import '../utils/wp-api.dart';
 import '../model/post.dart';
 import '../widgets/customIcons.dart';
-import 'package:loadmore/loadmore.dart';
 import '../model/bloc.dart';
+import 'package:spring_button/spring_button.dart';
 
 // To implement the drawer in next version
 import '../widgets/drawerWidget.dart';
 
-List<String> images = [
-  "assets/image_05.png",
-  "assets/image_04.jpg",
-  "assets/image_03.jpg",
-  "assets/image_02.jpg",
-  "assets/image_01.png",
-];
+final imagesLength = 5;
 
 class News extends StatefulWidget {
   @override
@@ -29,13 +21,13 @@ class News extends StatefulWidget {
 }
 
 class _NewsState extends State<News> {
-  var currentPage = images.length - 1.0;
+  var currentPage = imagesLength - 1.0;
 
   @override
   Widget build(BuildContext context) {
-    Bloc myStream = InheritedBloc.of(context).mybloc;
+    Bloc myBloc = InheritedBloc.of(context).mybloc;
 
-    PageController controller = PageController(initialPage: images.length - 1);
+    PageController controller = PageController(initialPage: imagesLength - 1);
     controller.addListener(() {
       setState(() {
         currentPage = controller.page;
@@ -67,13 +59,48 @@ class _NewsState extends State<News> {
                         fontFamily: "Calibre-Semibold",
                         letterSpacing: 1.0,
                       )),
-                  IconButton(
-                    icon: Icon(
-                      CustomIcons.option,
-                      size: 12.0,
-                      color: Colors.white,
+                  Spacer(),
+                  SpringButton(
+                    SpringButtonType.OnlyScale,
+                    Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        color: Colors.white
+                      ),
+                      //color: Colors.white,
+                      child: Icon(
+                        Icons.arrow_back_ios,
+                        size: 20.0,
+                        color: Colors.black,
+                      ),
                     ),
-                    onPressed: () {},
+                    onTap: () {
+                      myBloc.previousPage();
+                    },
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  SpringButton(
+                    SpringButtonType.OnlyScale,
+                    Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        color: Colors.white
+                      ),
+                      child: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 20.0,
+                          color: Colors.black,
+                        ),
+                    ),
+                    onTap: () {
+                      myBloc.nextPage();
+                    },
                   )
                 ],
               ),
@@ -92,36 +119,41 @@ class _NewsState extends State<News> {
                         padding: EdgeInsets.symmetric(
                             horizontal: 22.0, vertical: 6.0),
                         child: Text("Animated",
-                            style: TextStyle(color: Colors.white)),
+                            style:
+                                TextStyle(fontSize: 15, color: Colors.white)),
                       ),
                     ),
                   ),
                   SizedBox(
                     width: 15.0,
                   ),
-                  Text("25+ Stories",
-                      style: TextStyle(color: Colors.blueAccent))
+                  Text("5 Stories",
+                      style: TextStyle(fontSize: 15, color: Colors.blueAccent))
                 ],
               ),
             ),
             StreamBuilder<UnmodifiableListView<Post>>(
-                stream: myStream.posts,
+                stream: myBloc.posts,
                 initialData: UnmodifiableListView<Post>([]),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (!snapshot.hasData) {
+                    print("Loading Data");
                     return CircularProgressIndicator();
                   }
                   return GestureDetector(
                     onTap: () {
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //     builder: (_) =>
-                      //         PostWidget(reversedPosts[currentPage.round()])));
+                      Iterable reverser = snapshot.data.reversed;
+                      UnmodifiableListView<Post> reversedPostList =
+                          reverser.toList();
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => PostWidget(
+                              reversedPostList[currentPage.round()])));
                     },
                     child: Stack(children: <Widget>[
                       CardScrollWidget(currentPage, snapshot.data),
                       Positioned.fill(
                         child: PageView.builder(
-                          itemCount: images.length,
+                          itemCount: imagesLength,
                           controller: controller,
                           reverse: true,
                           itemBuilder: (context, index) {
@@ -169,23 +201,22 @@ class _NewsState extends State<News> {
                         padding: EdgeInsets.symmetric(
                             horizontal: 22.0, vertical: 6.0),
                         child: Text("Latest",
-                            style: TextStyle(color: Colors.white)),
+                            style:
+                                TextStyle(fontSize: 15, color: Colors.white)),
                       ),
                     ),
                   ),
                   SizedBox(
                     width: 15.0,
                   ),
-                  Text("9+ Stories", style: TextStyle(color: Colors.blueAccent))
+                  Text("9+ Stories",
+                      style: TextStyle(fontSize: 15, color: Colors.blueAccent))
                 ],
               ),
             ),
             SizedBox(
-              height: 20.0,
+              height: 200.0,
             ),
-            Container(
-              height: 100,
-            )
           ],
         ),
       ),

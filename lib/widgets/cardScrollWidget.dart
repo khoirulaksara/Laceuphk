@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_laceuphk/model/post.dart';
 
 var cardAspectRatio = 12.0 / 14.0;
 var widgetAspectRatio = cardAspectRatio * 1.2;
 
 class CardScrollWidget extends StatelessWidget {
-  final currentPage;
+  final double currentPage;
   final padding = 20.0;
   final verticalInset = 20.0;
-  final _posts;
+  final List<Post> _posts;
 
   CardScrollWidget(this.currentPage, this._posts);
 
@@ -107,7 +108,7 @@ class CardScrollWidget extends StatelessWidget {
                                         borderRadius:
                                             BorderRadius.circular(20.0)),
                                     child: Text("Read More",
-                                        style: TextStyle(color: Colors.white)),
+                                        style: TextStyle(color: Colors.white, fontSize: 10)),
                                   ),
                                 )
                               ],

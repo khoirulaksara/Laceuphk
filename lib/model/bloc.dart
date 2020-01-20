@@ -1,27 +1,19 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
-
-import 'post.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
+
 import '../utils/wp-api.dart';
 import '../model/post.dart';
 
-
 class Bloc {
-  final _postsSubject = BehaviorSubject<UnmodifiableListView<Post>>();
-
   var _posts = <Post>[];
   var pageNumber = 1;
+  List<int> _ids = [];
 
-  List<int> _ids = [
-    // 9922,
-    // 9902,
-    // 9893,
-    // 9889,
-    // 9877,  
-  ];
+  final _postsSubject = BehaviorSubject<UnmodifiableListView<Post>>();
+  Stream<List<Post>> get posts => _postsSubject.stream;
 
   Bloc() {
     _updatePosts().then((_) {
@@ -29,7 +21,21 @@ class Bloc {
     });
   }
 
-  Stream<List<Post>> get posts => _postsSubject.stream;
+  previousPage() {
+    if (pageNumber > 1) {
+      pageNumber--;
+      _updatePosts().then((_) {
+        _postsSubject.add(UnmodifiableListView(_posts));
+      });
+    }
+  }
+
+  nextPage() {
+    pageNumber++;
+    _updatePosts().then((_) {
+      _postsSubject.add(UnmodifiableListView(_posts));
+    });
+  }
 
   Future<Post> _getPost(int id) async {
     final postURL = WordpressApi.contentURL + id.toString();
@@ -40,13 +46,10 @@ class Bloc {
     throw ApiError("Article $id couldn't be fetched.");
   }
 
-  void parseJson2Ids() {
-
-  }
-
   Future<Null> _updatePosts() async {
     await WordpressApi.loadURL();
-    final listURL = WordpressApi.firstTitleUrl.replaceAll('*', pageNumber.toString());
+    final listURL =
+        WordpressApi.firstTitleUrl.replaceAll('*', pageNumber.toString());
     final listResponse = await http.get(listURL);
     final parsedJson = jsonDecode(listResponse.body);
     for (var parsedJson in parsedJson) {
