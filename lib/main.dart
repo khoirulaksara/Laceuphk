@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_laceuphk/widgets/drawerWidget.dart';
 import './screen/News.dart';
-//import './screen/Store.dart';
+import './screen/Store.dart';
 import './screen/Explore.dart';
 import './model/bloc.dart';
+import './widgets/postSearch.dart';
 
 void main() {
   runApp(InheritedBloc(child: MyApp()));
@@ -34,7 +36,7 @@ class MyAppState extends State<MyApp> {
   int _selectedPage = 0;
   final _pageOptions = [
     News(),
-    //StorePage(),
+    StorePage(),
     Explore(),
   ];
 
@@ -44,7 +46,11 @@ class MyAppState extends State<MyApp> {
       size: 30,
       color: Colors.white,
     ),
-    //Icon(Icons.store, size: 35),
+    Icon(
+      Icons.store,
+      size: 30,
+      color: Colors.white,
+    ),
     Icon(
       Icons.explore,
       size: 30,
@@ -60,22 +66,12 @@ class MyAppState extends State<MyApp> {
         primaryColor: Color(0xFF2d3447),
       ),
       home: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(40.0),
-            child: AppBar(
-              title: Text("LaceupHK"),
-              elevation: 0,
-              actions: <Widget>[
-                IconButton(
-                  onPressed: () {
-                    
-                  },
-                  icon: Icon(Icons.search),
-                )
-              ],
-            ),
+        drawer: SafeArea(child: DrawerWidget()),
+          appBar: AppBar(
+            title: Text("LaceupHK"),
+            elevation: 0,
+            actions: <Widget>[SearchButton()],
           ),
-          //backgroundColor: Color(0xFF1b1e44),
           body: _pageOptions[_selectedPage],
           bottomNavigationBar: Container(
             color: Color(0xFF1b1e44),
@@ -106,6 +102,22 @@ class MyAppState extends State<MyApp> {
               ),
             ),
           )),
+    );
+  }
+}
+
+class SearchButton extends StatelessWidget {
+  const SearchButton({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        showSearch(context: context, delegate: PostSearch());
+      },
+      icon: Icon(Icons.search),
     );
   }
 }

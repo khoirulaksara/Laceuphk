@@ -69,21 +69,21 @@ class CardScrollWidget extends StatelessWidget {
                             fit: BoxFit.cover),
                         Align(
                           alignment: Alignment.bottomLeft,
-                          child: SingleChildScrollView(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 16.0, vertical: 8.0),
-                                  child: ConstrainedBox(
-                                    constraints: BoxConstraints(
-                                      minWidth: 0,
-                                      maxWidth: 250.0,
-                                      minHeight: 0,
-                                      maxHeight: 100.0,
-                                    ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 8.0),
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width * 0.5,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    color: Colors.black.withOpacity(0.5)
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
                                     child: AutoSizeText(
                                       _posts[postContoll].title,
                                       style: TextStyle(
@@ -94,25 +94,25 @@ class CardScrollWidget extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                SizedBox(
-                                  height: 10.0,
+                              ),
+                              SizedBox(
+                                height: 10.0,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 12.0, bottom: 12.0),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 22.0, vertical: 6.0),
+                                  decoration: BoxDecoration(
+                                      color: Colors.blueAccent,
+                                      borderRadius:
+                                          BorderRadius.circular(20.0)),
+                                  child: Text("Read More",
+                                      style: TextStyle(color: Colors.white, fontSize: 10)),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 12.0, bottom: 12.0),
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 22.0, vertical: 6.0),
-                                    decoration: BoxDecoration(
-                                        color: Colors.blueAccent,
-                                        borderRadius:
-                                            BorderRadius.circular(20.0)),
-                                    child: Text("Read More",
-                                        style: TextStyle(color: Colors.white, fontSize: 10)),
-                                  ),
-                                )
-                              ],
-                            ),
+                              )
+                            ],
                           ),
                         )
                       ],
