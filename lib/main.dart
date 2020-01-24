@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_laceuphk/utils/firebase_message.dart';
 import 'package:flutter_laceuphk/widgets/drawerWidget.dart';
 import './screen/News.dart';
 import './screen/Store.dart';
 import './screen/Explore.dart';
 import './model/bloc.dart';
 import './widgets/postSearch.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main() {
   runApp(InheritedBloc(child: MyApp()));
@@ -33,6 +35,7 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
+  FirebaseMessaging _firebaseMessaging = configureMessaging();
   int _selectedPage = 0;
   final _pageOptions = [
     News(),

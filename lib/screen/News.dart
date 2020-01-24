@@ -11,7 +11,7 @@ import '../widgets/customIcons.dart';
 import '../model/bloc.dart';
 
 // To implement the drawer in next version
-import 'package:loadmore/loadmore.dart';
+// import 'package:loadmore/loadmore.dart';
 
 final imagesLength = 5;
 

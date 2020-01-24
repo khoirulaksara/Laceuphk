@@ -23,30 +23,39 @@ class DrawerWidget extends StatelessWidget {
         child: Container(
       color: Color(0xFF343441),
       child: Padding(
-        padding: const EdgeInsets.only(left: 20.0, top: 50),
+        padding: const EdgeInsets.only(left: 10.0, top: 50),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text("Roger Hoffman", style: TextStyle(color: Colors.white)),
+            Padding(
+              padding: const EdgeInsets.only(left: 12.0),
+              child: Text("Roger Hoffman", style: TextStyle(color: Colors.white)),
+            ),
             SizedBox(height: 5),
-            Text("San Francisco, CA", style: TextStyle(color: Colors.grey)),
+            Padding(
+              padding: const EdgeInsets.only(left: 12.0),
+              child: Text("San Francisco, CA", style: TextStyle(color: Colors.grey)),
+            ),
             SizedBox(height: 30),
             Expanded(
               child: ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: menuItem.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return FlatButton.icon(
-                      icon: Icon(menuIcons[index], color: Colors.white),
-                      label: Text(menuItem[index],
-                          style: TextStyle(color: Colors.grey)),
-                      onPressed: () {});
+                  return Align(
+                    alignment: Alignment.centerLeft,
+                    child: FlatButton.icon(
+                        icon: Icon(menuIcons[index], color: Colors.white),
+                        label: Text(menuItem[index],
+                            style: TextStyle(color: Colors.grey)),
+                        onPressed: () {}),
+                  );
                 },
               ),
             ),
             FlatButton.icon(
-                icon: Icon(Icons.do_not_disturb),
-                label: Text("Logout"),
+                icon: Icon(Icons.do_not_disturb, color: Colors.white),
+                label: Text("Logout", style: TextStyle(color: Colors.grey)),
                 onPressed: () {}),
           ],
         ),

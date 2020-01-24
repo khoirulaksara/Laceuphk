@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "642363694302",
+    "firebase_url": "https://laceuphk-3e3d1.firebaseio.com",
+    "project_id": "laceuphk-3e3d1",
+    "storage_bucket": "laceuphk-3e3d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:642363694302:android:0e787c045c3f0d8bf7364f",
+        "android_client_info": {
+          "package_name": "com.jw.flutterLaceuphk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "642363694302-ssfajf9rsj565h8j6a7olprk2a25llkb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMadzKtGwHcVUsEQLPFsX4hto7L2l43FE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "642363694302-ssfajf9rsj565h8j6a7olprk2a25llkb.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "642363694302-gsb676l5e4rqmb7081j6g4smihost98s.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jw.flutterLaceuphk"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
