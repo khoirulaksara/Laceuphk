@@ -4,15 +4,13 @@ class DrawerWidget extends StatelessWidget {
   final menuItem = [
     "Dashboard",
     "Messages",
-    "Utility Bills",
-    "Funds Transfer",
-    "Branches"
+    "Trade History",
+    "Setting"
   ];
 
   final menuIcons = [
     Icons.account_balance_wallet,
     Icons.message,
-    Icons.compare,
     Icons.compare_arrows,
     Icons.build
   ];
@@ -21,7 +19,7 @@ class DrawerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
         child: Container(
-      color: Color(0xFF343441),
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.only(left: 10.0, top: 50),
         child: Column(
@@ -29,12 +27,12 @@ class DrawerWidget extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(left: 12.0),
-              child: Text("Roger Hoffman", style: TextStyle(color: Colors.white)),
+              child: Text("User Name", style: TextStyle(color: Colors.black)),
             ),
             SizedBox(height: 5),
             Padding(
               padding: const EdgeInsets.only(left: 12.0),
-              child: Text("San Francisco, CA", style: TextStyle(color: Colors.grey)),
+              child: Text("San Francisco, CA", style: TextStyle(color: Colors.red)),
             ),
             SizedBox(height: 30),
             Expanded(
@@ -45,17 +43,17 @@ class DrawerWidget extends StatelessWidget {
                   return Align(
                     alignment: Alignment.centerLeft,
                     child: FlatButton.icon(
-                        icon: Icon(menuIcons[index], color: Colors.white),
+                        icon: Icon(menuIcons[index], color: Colors.red),
                         label: Text(menuItem[index],
-                            style: TextStyle(color: Colors.grey)),
+                            style: TextStyle(color: Colors.black)),
                         onPressed: () {}),
                   );
                 },
               ),
             ),
             FlatButton.icon(
-                icon: Icon(Icons.do_not_disturb, color: Colors.white),
-                label: Text("Logout", style: TextStyle(color: Colors.grey)),
+                icon: Icon(Icons.do_not_disturb, color: Colors.red),
+                label: Text("Logout", style: TextStyle(color: Colors.black)),
                 onPressed: () {}),
           ],
         ),

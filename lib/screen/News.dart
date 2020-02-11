@@ -7,7 +7,6 @@ import '../main.dart';
 import '../widgets/cardScrollWidget.dart';
 import '../widgets/postWidget.dart';
 import '../model/post.dart';
-import '../widgets/customIcons.dart';
 import '../model/bloc.dart';
 
 // To implement the drawer in next version
@@ -38,8 +37,8 @@ class _NewsState extends State<News> {
       decoration: BoxDecoration(
           gradient: LinearGradient(
               colors: [
-            Color(0xFF1b1e44),
-            Color(0xFF2d3447),
+            Colors.yellow,
+            Colors.orange,
           ],
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
@@ -54,9 +53,9 @@ class _NewsState extends State<News> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text("Trending",
+                  Text("News",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontSize: 35.0,
                         fontFamily: "Calibre-Semibold",
                         letterSpacing: 1.0,
@@ -90,11 +89,11 @@ class _NewsState extends State<News> {
                             decoration: BoxDecoration(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10)),
-                                color: Colors.white),
+                                color: Colors.red),
                             child: Icon(
                               Icons.arrow_back_ios,
                               size: 20.0,
-                              color: Colors.black,
+                              color: Colors.white,
                             ),
                           ),
                           onTap: () {
@@ -121,11 +120,11 @@ class _NewsState extends State<News> {
                             decoration: BoxDecoration(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10)),
-                                color: Colors.white),
+                                color: Colors.red),
                             child: Icon(
                               Icons.arrow_forward_ios,
                               size: 20.0,
-                              color: Colors.black,
+                              color: Colors.white,
                             ),
                           ),
                           onTap: () {
@@ -139,33 +138,33 @@ class _NewsState extends State<News> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Color(0xFFff6e6e),
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    child: Center(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 22.0, vertical: 6.0),
-                        child: Text("Animated",
-                            style:
-                                TextStyle(fontSize: 15, color: Colors.white)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 15.0,
-                  ),
-                  Text("5 Stories",
-                      style: TextStyle(fontSize: 15, color: Colors.blueAccent))
-                ],
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 20.0),
+            //   child: Row(
+            //     children: <Widget>[
+            //       Container(
+            //         decoration: BoxDecoration(
+            //           color: Color(0xFFff6e6e),
+            //           borderRadius: BorderRadius.circular(20.0),
+            //         ),
+            //         child: Center(
+            //           child: Padding(
+            //             padding: EdgeInsets.symmetric(
+            //                 horizontal: 22.0, vertical: 6.0),
+            //             child: Text("Animated",
+            //                 style:
+            //                     TextStyle(fontSize: 15, color: Colors.white)),
+            //           ),
+            //         ),
+            //       ),
+            //       SizedBox(
+            //         width: 15.0,
+            //       ),
+            //       Text("5 Stories",
+            //           style: TextStyle(fontSize: 15, color: Colors.blueAccent))
+            //     ],
+            //   ),
+            // ),
             StreamBuilder<UnmodifiableListView<Post>>(
                 stream: myBloc.posts,
                 initialData: UnmodifiableListView<Post>([]),
@@ -200,49 +199,49 @@ class _NewsState extends State<News> {
                 children: <Widget>[
                   Text("Favourite",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontSize: 35.0,
                         fontFamily: "Calibre-Semibold",
                         letterSpacing: 1.0,
                       )),
-                  IconButton(
-                    icon: Icon(
-                      CustomIcons.option,
-                      size: 12.0,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {},
-                  )
+                  // IconButton(
+                  //   icon: Icon(
+                  //     CustomIcons.option,
+                  //     size: 12.0,
+                  //     color: Colors.white,
+                  //   ),
+                  //   onPressed: () {},
+                  // )
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.blueAccent,
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    child: Center(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 22.0, vertical: 6.0),
-                        child: Text("Latest",
-                            style:
-                                TextStyle(fontSize: 15, color: Colors.white)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 15.0,
-                  ),
-                  Text("9+ Stories",
-                      style: TextStyle(fontSize: 15, color: Colors.blueAccent))
-                ],
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 20.0),
+            //   child: Row(
+            //     children: <Widget>[
+            //       Container(
+            //         decoration: BoxDecoration(
+            //           color: Colors.blueAccent,
+            //           borderRadius: BorderRadius.circular(20.0),
+            //         ),
+            //         child: Center(
+            //           child: Padding(
+            //             padding: EdgeInsets.symmetric(
+            //                 horizontal: 22.0, vertical: 6.0),
+            //             child: Text("Latest",
+            //                 style:
+            //                     TextStyle(fontSize: 15, color: Colors.white)),
+            //           ),
+            //         ),
+            //       ),
+            //       SizedBox(
+            //         width: 15.0,
+            //       ),
+            //       Text("9+ Stories",
+            //           style: TextStyle(fontSize: 15, color: Colors.blueAccent))
+            //     ],
+            //   ),
+            // ),
           ])),
           SliverPadding(
             padding: const EdgeInsets.all(8.0),

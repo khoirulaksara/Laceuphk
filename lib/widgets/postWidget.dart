@@ -26,7 +26,7 @@ class PostWidget extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
-            backgroundColor: Color(0xFF2d3447),
+            backgroundColor: Colors.orange,
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(40),
               child: AppBar(
@@ -55,7 +55,7 @@ class PostWidget extends StatelessWidget {
                         }
                       },
                       data: snapshot.data.content,
-                      defaultTextStyle: TextStyle(color: Colors.white),
+                      defaultTextStyle: TextStyle(color: Colors.black),
                     ),
                   ],
                 ),
@@ -64,16 +64,15 @@ class PostWidget extends StatelessWidget {
           );
         } else {
           return Scaffold(
-            backgroundColor: Color(0xFF2d3447),
-            appBar: PreferredSize(
-              preferredSize: Size.fromHeight(40),
-              child: AppBar(
-                title: AutoSizeText("Loading", maxLines: 1),
-                elevation: 0.0,
+              backgroundColor: Colors.orange,
+              appBar: PreferredSize(
+                preferredSize: Size.fromHeight(40),
+                child: AppBar(
+                  title: AutoSizeText("Loading", maxLines: 1),
+                  elevation: 0.0,
+                ),
               ),
-            ),
-            body: Center(child: CircularProgressIndicator())
-          );
+              body: Center(child: CircularProgressIndicator()));
         }
       },
     );

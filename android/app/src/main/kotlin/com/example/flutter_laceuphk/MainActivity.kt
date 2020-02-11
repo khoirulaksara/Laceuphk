@@ -1,4 +1,4 @@
-package com.jw.flutterLaceuphk
+package com.flutter_laceuphk
 
 import android.os.Bundle
 import io.flutter.app.FlutterActivity

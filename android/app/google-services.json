@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:642363694302:android:0e787c045c3f0d8bf7364f",
+        "mobilesdk_app_id": "1:642363694302:android:7cd1d94898ce7847f7364f",
         "android_client_info": {
-          "package_name": "com.jw.flutterLaceuphk"
+          "package_name": "com.flutter_laceuphk"
         }
       },
       "oauth_client": [

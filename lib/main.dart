@@ -47,18 +47,18 @@ class MyAppState extends State<MyApp> {
     Icon(
       Icons.home,
       size: 30,
-      color: Colors.white,
+      color: Colors.black,
     ),
-    Icon(
-      Icons.store,
-      size: 30,
-      color: Colors.white,
-    ),
-    Icon(
-      Icons.explore,
-      size: 30,
-      color: Colors.white,
-    ),
+    // Icon(
+    //   Icons.store,
+    //   size: 30,
+    //   color: Colors.black,
+    // ),
+    // Icon(
+    //   Icons.explore,
+    //   size: 30,
+    //   color: Colors.black,
+    // ),
   ];
 
   @override
@@ -66,7 +66,7 @@ class MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'LaceupHK',
       theme: ThemeData(
-        primaryColor: Color(0xFF2d3447),
+        primaryColor: Colors.orange,
       ),
       home: Scaffold(
         drawer: SafeArea(child: DrawerWidget()),
@@ -77,11 +77,10 @@ class MyAppState extends State<MyApp> {
           ),
           body: _pageOptions[_selectedPage],
           bottomNavigationBar: Container(
-            color: Color(0xFF1b1e44),
             child: SafeArea(
               child: Container(
                 height: 50,
-                decoration: BoxDecoration(color: Color(0xFF1b1e44), boxShadow: [
+                decoration: BoxDecoration(color: Colors.yellow, boxShadow: [
                   BoxShadow(
                       color: Colors.black12.withOpacity(0.065),
                       offset: Offset(0, -3),

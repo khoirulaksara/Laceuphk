@@ -105,7 +105,7 @@ class CardScrollWidget extends StatelessWidget {
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 22.0, vertical: 6.0),
                                   decoration: BoxDecoration(
-                                      color: Colors.blueAccent,
+                                      color: Colors.red,
                                       borderRadius:
                                           BorderRadius.circular(20.0)),
                                   child: Text("Read More",
