@@ -49,29 +49,29 @@ class MyAppState extends State<MyApp> {
       size: 30,
       color: Colors.black,
     ),
-    // Icon(
-    //   Icons.store,
-    //   size: 30,
-    //   color: Colors.black,
-    // ),
-    // Icon(
-    //   Icons.explore,
-    //   size: 30,
-    //   color: Colors.black,
-    // ),
+    Icon(
+      Icons.store,
+      size: 30,
+      color: Colors.black,
+    ),
+    Icon(
+      Icons.explore,
+      size: 30,
+      color: Colors.black,
+    ),
   ];
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'LaceupHK',
+      title: 'The Laceup',
       theme: ThemeData(
         primaryColor: Colors.orange,
       ),
       home: Scaffold(
         drawer: SafeArea(child: DrawerWidget()),
           appBar: AppBar(
-            title: Text("LaceupHK"),
+            title: Text("The Laceup"),
             elevation: 0,
             actions: <Widget>[SearchButton()],
           ),

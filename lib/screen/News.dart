@@ -138,33 +138,33 @@ class _NewsState extends State<News> {
                 ],
               ),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 20.0),
-            //   child: Row(
-            //     children: <Widget>[
-            //       Container(
-            //         decoration: BoxDecoration(
-            //           color: Color(0xFFff6e6e),
-            //           borderRadius: BorderRadius.circular(20.0),
-            //         ),
-            //         child: Center(
-            //           child: Padding(
-            //             padding: EdgeInsets.symmetric(
-            //                 horizontal: 22.0, vertical: 6.0),
-            //             child: Text("Animated",
-            //                 style:
-            //                     TextStyle(fontSize: 15, color: Colors.white)),
-            //           ),
-            //         ),
-            //       ),
-            //       SizedBox(
-            //         width: 15.0,
-            //       ),
-            //       Text("5 Stories",
-            //           style: TextStyle(fontSize: 15, color: Colors.blueAccent))
-            //     ],
-            //   ),
-            // ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xFFff6e6e),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 22.0, vertical: 6.0),
+                        child: Text("Animated",
+                            style:
+                                TextStyle(fontSize: 15, color: Colors.white)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 15.0,
+                  ),
+                  Text("5 Stories",
+                      style: TextStyle(fontSize: 15, color: Colors.blueAccent))
+                ],
+              ),
+            ),
             StreamBuilder<UnmodifiableListView<Post>>(
                 stream: myBloc.posts,
                 initialData: UnmodifiableListView<Post>([]),
@@ -181,6 +181,10 @@ class _NewsState extends State<News> {
                       CardScrollWidget(currentPage, snapshot.data),
                       Positioned.fill(
                         child: PageView.builder(
+                          onPageChanged: (int page) {
+                            var swipingRight = page > controller.page;
+                            print(swipingRight);
+                          },
                           itemCount: imagesLength,
                           controller: controller,
                           reverse: true,
@@ -204,44 +208,36 @@ class _NewsState extends State<News> {
                         fontFamily: "Calibre-Semibold",
                         letterSpacing: 1.0,
                       )),
-                  // IconButton(
-                  //   icon: Icon(
-                  //     CustomIcons.option,
-                  //     size: 12.0,
-                  //     color: Colors.white,
-                  //   ),
-                  //   onPressed: () {},
-                  // )
                 ],
               ),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 20.0),
-            //   child: Row(
-            //     children: <Widget>[
-            //       Container(
-            //         decoration: BoxDecoration(
-            //           color: Colors.blueAccent,
-            //           borderRadius: BorderRadius.circular(20.0),
-            //         ),
-            //         child: Center(
-            //           child: Padding(
-            //             padding: EdgeInsets.symmetric(
-            //                 horizontal: 22.0, vertical: 6.0),
-            //             child: Text("Latest",
-            //                 style:
-            //                     TextStyle(fontSize: 15, color: Colors.white)),
-            //           ),
-            //         ),
-            //       ),
-            //       SizedBox(
-            //         width: 15.0,
-            //       ),
-            //       Text("9+ Stories",
-            //           style: TextStyle(fontSize: 15, color: Colors.blueAccent))
-            //     ],
-            //   ),
-            // ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.blueAccent,
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 22.0, vertical: 6.0),
+                        child: Text("Latest",
+                            style:
+                                TextStyle(fontSize: 15, color: Colors.white)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 15.0,
+                  ),
+                  Text("9+ Stories",
+                      style: TextStyle(fontSize: 15, color: Colors.blueAccent))
+                ],
+              ),
+            ),
           ])),
           SliverPadding(
             padding: const EdgeInsets.all(8.0),
@@ -260,7 +256,8 @@ class _NewsState extends State<News> {
                         child: GestureDetector(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => PostWidget(snapshot.data[index].postId)));
+                                builder: (_) =>
+                                    PostWidget(snapshot.data[index].postId)));
                           },
                           child: Container(
                               decoration: BoxDecoration(
